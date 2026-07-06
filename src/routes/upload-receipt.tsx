@@ -2,8 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
-import { API_BASE } from "@/lib/api";
+import { submitReceipt } from "@/lib/api";
 import ogImg from "@/assets/og-home.jpg";
+
 
 const SITE_URL = "https://eyespyr.com";
 const OG_IMAGE = `${SITE_URL}${ogImg}`;

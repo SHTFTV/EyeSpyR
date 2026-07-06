@@ -19,6 +19,7 @@ import { Route as NetworkRouteImport } from './routes/network'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as EyespyrRouteImport } from './routes/eyespyr'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as EntryIdRouteImport } from './routes/entry.$id'
 
 const VerifyBusinessRoute = VerifyBusinessRouteImport.update({
   id: '/verify-business',
@@ -70,6 +71,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EntryIdRoute = EntryIdRouteImport.update({
+  id: '/entry/$id',
+  path: '/entry/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/transparency': typeof TransparencyRoute
   '/upload-receipt': typeof UploadReceiptRoute
   '/verify-business': typeof VerifyBusinessRoute
+  '/entry/$id': typeof EntryIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -94,6 +101,7 @@ export interface FileRoutesByTo {
   '/transparency': typeof TransparencyRoute
   '/upload-receipt': typeof UploadReceiptRoute
   '/verify-business': typeof VerifyBusinessRoute
+  '/entry/$id': typeof EntryIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -107,6 +115,7 @@ export interface FileRoutesById {
   '/transparency': typeof TransparencyRoute
   '/upload-receipt': typeof UploadReceiptRoute
   '/verify-business': typeof VerifyBusinessRoute
+  '/entry/$id': typeof EntryIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -121,6 +130,7 @@ export interface FileRouteTypes {
     | '/transparency'
     | '/upload-receipt'
     | '/verify-business'
+    | '/entry/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -133,6 +143,7 @@ export interface FileRouteTypes {
     | '/transparency'
     | '/upload-receipt'
     | '/verify-business'
+    | '/entry/$id'
   id:
     | '__root__'
     | '/'
@@ -145,6 +156,7 @@ export interface FileRouteTypes {
     | '/transparency'
     | '/upload-receipt'
     | '/verify-business'
+    | '/entry/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -158,6 +170,7 @@ export interface RootRouteChildren {
   TransparencyRoute: typeof TransparencyRoute
   UploadReceiptRoute: typeof UploadReceiptRoute
   VerifyBusinessRoute: typeof VerifyBusinessRoute
+  EntryIdRoute: typeof EntryIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -232,6 +245,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/entry/$id': {
+      id: '/entry/$id'
+      path: '/entry/$id'
+      fullPath: '/entry/$id'
+      preLoaderRoute: typeof EntryIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -246,6 +266,7 @@ const rootRouteChildren: RootRouteChildren = {
   TransparencyRoute: TransparencyRoute,
   UploadReceiptRoute: UploadReceiptRoute,
   VerifyBusinessRoute: VerifyBusinessRoute,
+  EntryIdRoute: EntryIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
