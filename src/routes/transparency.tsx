@@ -77,16 +77,8 @@ const rules = [
   { t: "No pay-to-play", b: "Pro plan buys monitoring and alerting. It does not buy score movement. There is no path to a paid rank." },
 ];
 
-const timeline = [
-  { when: "2026-06-04 14:22", tag: "CREDENTIAL", status: "verified", body: "Red Seal Plumbing certificate — validated against ITA BC registry." },
-  { when: "2026-06-04 14:24", tag: "CREDENTIAL", status: "verified", body: "WCB clearance letter — active, no outstanding claims." },
-  { when: "2026-06-05 09:11", tag: "RECEIPT", status: "weighted", body: "Invoice #4471 uploaded by customer · $2,340 · verified against operator ledger. Review: 5.0" },
-  { when: "2026-06-11 17:48", tag: "OPEN-WEB", status: "logged", body: "New Google review · 4.0 · anonymous · aggregated at standard weight." },
-  { when: "2026-06-14 08:02", tag: "SECURITY", status: "flagged", body: "TLS certificate expiring in 14 days. Alert sent to operator. Score impact: -0.02 pending." },
-  { when: "2026-06-14 11:30", tag: "SECURITY", status: "resolved", body: "Operator renewed certificate. Flag cleared. Score restored." },
-  { when: "2026-06-20 19:15", tag: "RECEIPT", status: "weighted", body: "Invoice #4489 uploaded · $890 · verified. Review: 2.0 — 'callback delayed'. Full text public." },
-  { when: "2026-06-21 07:44", tag: "DISPUTE", status: "logged", body: "Operator responded on Invoice #4489. Response appended, original review unchanged." },
-];
+
+
 
 function Transparency() {
   return (
