@@ -165,6 +165,31 @@ export async function subscribeToEntryUpdates(
   }
 }
 
+/**
+ * Remove an email from status-change notifications for a ledger entry.
+ * Backend contract: POST {API_BASE}/api/notify/unsubscribe
+ *   { entryId: string, email: string, token?: string }
+ * If `token` is provided (from an email footer one-click link), the server
+ * skips the email match and uses the token instead.
+ */
+export async function unsubscribeFromEntryUpdates(
+  entryId: string,
+  email: string,
+  token?: string,
+): Promise<NotifySubscribeResponse> {
+  try {
+    const res = await fetch(`${API_BASE}/api/notify/unsubscribe`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ entryId, email, token }),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return (await res.json()) as NotifySubscribeResponse;
+  } catch {
+    return { success: true, entryId, email, demo: true };
+  }
+}
+
 export async function getEntryDetail(id: string): Promise<EntryDetail & { demo?: boolean }> {
   try {
     const res = await fetch(`${API_BASE}/api/entries/${encodeURIComponent(id)}`);
