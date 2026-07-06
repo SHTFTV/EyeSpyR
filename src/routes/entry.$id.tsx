@@ -253,58 +253,160 @@ function ShareButton({ id }: { id: string }) {
 
 function EmailAlerts({ entryId }: { entryId: string }) {
   const [email, setEmail] = useState("");
-  const [state, setState] = useState<"idle" | "sending" | "done" | "demo">("idle");
+  const [mode, setMode] = useState<"sub" | "unsub">("sub");
+  const [state, setState] = useState<"idle" | "sending" | "subscribed" | "unsubscribed" | "demo">(
+    "idle",
+  );
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!email.trim()) return;
     setState("sending");
-    const res = await subscribeToEntryUpdates(entryId, email.trim());
-    setState(res.demo ? "demo" : "done");
+    const res =
+      mode === "sub"
+        ? await subscribeToEntryUpdates(entryId, email.trim())
+        : await unsubscribeFromEntryUpdates(entryId, email.trim());
+    if (res.demo) setState("demo");
+    else setState(mode === "sub" ? "subscribed" : "unsubscribed");
   }
+
+  const busy = state === "sending";
+  const isSub = mode === "sub";
 
   return (
     <div className="panel grid gap-4 p-6 sm:grid-cols-[1fr_auto] sm:items-end">
       <div>
-        <p className="eyebrow text-[color:var(--acid)]">Get status-change alerts</p>
-        <h3 className="mt-2 font-display text-xl font-black uppercase">
-          Email me when this entry moves
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => { setMode("sub"); setState("idle"); }}
+            className={`mono-label border px-2 py-1 ${isSub ? "border-[color:var(--acid)] text-[color:var(--acid)]" : "border-border text-muted-foreground"}`}
+          >
+            SUBSCRIBE
+          </button>
+          <button
+            type="button"
+            onClick={() => { setMode("unsub"); setState("idle"); }}
+            className={`mono-label border px-2 py-1 ${!isSub ? "border-[color:var(--acid)] text-[color:var(--acid)]" : "border-border text-muted-foreground"}`}
+          >
+            UNSUBSCRIBE
+          </button>
+        </div>
+        <h3 className="mt-3 font-display text-xl font-black uppercase">
+          {isSub ? "Email me when this entry moves" : "Stop status-change emails"}
         </h3>
         <p className="mt-2 text-sm text-muted-foreground">
-          One email per transition — received → checking → verified / weighted / flagged →
-          resolved. Unsubscribe anytime.
+          {isSub
+            ? "One email per transition — received → checking → verified / weighted / flagged → resolved."
+            : "We'll remove this email from all future notifications for this entry immediately."}
         </p>
       </div>
       <form onSubmit={onSubmit} className="flex flex-col gap-2 sm:flex-row">
         <input
           type="email"
           required
+          maxLength={255}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@domain.com"
           className="min-w-[240px] rounded-none border border-border bg-background px-3 py-2 text-sm outline-none focus:border-[color:var(--acid)]"
-          disabled={state === "sending" || state === "done"}
+          disabled={busy || state === "subscribed" || state === "unsubscribed"}
         />
         <button
           type="submit"
-          disabled={state === "sending" || state === "done"}
+          disabled={busy || state === "subscribed" || state === "unsubscribed"}
           className="acid-btn justify-center whitespace-nowrap"
         >
-          {state === "sending"
-            ? "Subscribing…"
-            : state === "done" || state === "demo"
+          {busy
+            ? "Working…"
+            : state === "subscribed"
               ? "Subscribed ✓"
-              : "Notify Me"}
+              : state === "unsubscribed"
+                ? "Unsubscribed ✓"
+                : isSub
+                  ? "Notify Me"
+                  : "Unsubscribe"}
         </button>
       </form>
       {state === "demo" && (
         <p className="mono-label text-muted-foreground sm:col-span-2">
-          DEMO MODE · Backend `/api/notify/subscribe` unreachable — request queued locally.
+          DEMO MODE · Backend unreachable — request queued locally.
         </p>
       )}
     </div>
   );
 }
+
+function ScoreBreakdownPanel({
+  breakdown,
+}: {
+  breakdown: NonNullable<EntryDetail["scoreBreakdown"]>;
+}) {
+  const factorKindLabel: Record<ScoreFactor["kind"], string> = {
+    credential: "CREDENTIAL",
+    positive_receipt: "POSITIVE RECEIPT",
+    negative_receipt: "NEGATIVE RECEIPT",
+    penalty: "PENALTY",
+  };
+
+  return (
+    <div className="panel p-6">
+      <p className="eyebrow">Public Score Breakdown</p>
+      <h2 className="mt-2 font-display text-2xl font-black uppercase">
+        Exact <span className="text-[color:var(--acid)]">contribution</span> per factor
+      </h2>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Baseline {breakdown.baseline} · Current total{" "}
+        <span className="font-display text-base font-black text-foreground">
+          {breakdown.total}
+        </span>
+      </p>
+
+      <ul className="mt-6 divide-y divide-border/60">
+        {breakdown.factors.map((f) => {
+          const positive = f.weightPct >= 0;
+          const color = positive ? "var(--acid)" : "#ff5a3d";
+          return (
+            <li key={f.id} className="grid gap-3 py-4 sm:grid-cols-[160px_1fr_100px] sm:items-center">
+              <span
+                className="mono-label w-fit border px-2 py-1"
+                style={{ borderColor: color, color }}
+              >
+                {factorKindLabel[f.kind]}
+              </span>
+              <div>
+                <p className="font-display text-sm font-bold uppercase">
+                  {f.entryId ? (
+                    <Link
+                      to="/entry/$id"
+                      params={{ id: f.entryId }}
+                      className="underline decoration-dotted underline-offset-4 hover:text-[color:var(--acid)]"
+                    >
+                      {f.label}
+                    </Link>
+                  ) : (
+                    f.label
+                  )}
+                </p>
+                {f.detail && (
+                  <p className="mt-1 text-xs text-muted-foreground">{f.detail}</p>
+                )}
+              </div>
+              <p
+                className="font-display text-2xl font-black sm:text-right"
+                style={{ color }}
+              >
+                {positive ? "+" : ""}
+                {f.weightPct}%
+              </p>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
 
 function formatWhen(iso: string): string {
   const d = new Date(iso);
