@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
-import heroImg from "@/assets/hero-eyespyr.jpg";
+import heroAsset from "@/assets/eyespyr-hero-banner.png.asset.json";
 import ogImg from "@/assets/og-eyespyr.jpg";
 import {
   IAM_TARGET_URL,
