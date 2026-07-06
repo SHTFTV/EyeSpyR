@@ -93,6 +93,58 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap",
       },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": "https://industryarmymarketing.com/#organization",
+              name: "Industry Army Marketing",
+              url: "https://industryarmymarketing.com",
+              logo: {
+                "@type": "ImageObject",
+                url: "https://industryarmymarketing.com/logo.jpg",
+                caption: "Industry Army Marketing Logo",
+              },
+              sameAs: [
+                "https://talc.tv",
+                "https://eyespyr.com",
+                "https://weddings.io",
+                "https://loveourlistings.com",
+                "https://buildershaus.com",
+              ],
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://industryarmymarketing.com/#website",
+              url: "https://industryarmymarketing.com",
+              name: "Industry Army Marketing",
+              publisher: { "@id": "https://industryarmymarketing.com/#organization" },
+            },
+            {
+              "@type": "WebApplication",
+              "@id": "https://eyespyr.com/#application",
+              name: "EyeSpyR",
+              url: "https://eyespyr.com",
+              applicationCategory: "BusinessApplication",
+              operatingSystem: "All",
+              author: { "@id": "https://industryarmymarketing.com/#organization" },
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://talc.tv/#website",
+              url: "https://talc.tv",
+              name: "Talc.tv",
+              publisher: { "@id": "https://industryarmymarketing.com/#organization" },
+            },
+          ],
+        }),
+      },
+    ],
+
   }),
   shellComponent: RootShell,
   component: RootComponent,
