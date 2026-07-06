@@ -81,6 +81,12 @@ const rules = [
 
 
 function Transparency() {
+  const { receipt, credential } = Route.useLoaderData() as {
+    receipt: EntryDetail & { demo?: boolean };
+    credential: EntryDetail & { demo?: boolean };
+  };
+  const isDemo = !!(receipt.demo || credential.demo);
+
   return (
     <SiteLayout>
       <PageHero
