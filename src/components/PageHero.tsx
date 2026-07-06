@@ -7,6 +7,10 @@ export function PageHero({
   lead,
   children,
   backgroundImage,
+  backgroundImageAlt = "EyeSpyR verification platform hero banner",
+  heroLink,
+  heroLinkLabel,
+  onHeroLinkClick,
 }: {
   eyebrow: string;
   title: string;
@@ -14,17 +18,39 @@ export function PageHero({
   lead?: string;
   children?: ReactNode;
   backgroundImage?: string;
+  backgroundImageAlt?: string;
+  heroLink?: string;
+  heroLinkLabel?: string;
+  onHeroLinkClick?: () => void;
 }) {
+  const ImageEl = backgroundImage ? (
+    <img
+      src={backgroundImage}
+      alt={backgroundImageAlt}
+      className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-60"
+      loading="eager"
+    />
+  ) : null;
+
   return (
     <section className="relative overflow-hidden border-b border-border/60 px-5 py-20 sm:px-8 sm:py-28">
       {backgroundImage && (
         <>
-          <img
-            src={backgroundImage}
-            alt=""
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-60"
-          />
+          {heroLink ? (
+            <a
+              href={heroLink}
+              rel="dofollow noopener"
+              target="_blank"
+              aria-label={heroLinkLabel ?? "Visit Industry Army Marketing"}
+              onClick={onHeroLinkClick}
+              className="absolute inset-0 z-0 block"
+            >
+              {ImageEl}
+              <span className="sr-only">{heroLinkLabel ?? "Visit Industry Army Marketing"}</span>
+            </a>
+          ) : (
+            ImageEl
+          )}
           <div
             className="pointer-events-none absolute inset-0"
             style={{
@@ -54,4 +80,3 @@ export function PageHero({
     </section>
   );
 }
-
