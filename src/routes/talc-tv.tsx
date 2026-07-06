@@ -10,7 +10,7 @@ import {
   type BlastChannel,
 } from "@/lib/analytics";
 
-const SITE_URL = "https://eyespyr.com";
+const SITE_URL = "";
 const CANONICAL = `${SITE_URL}/talc-tv`;
 const OG_IMAGE = `${SITE_URL}${ogImg}`;
 const DEMO_ENTRY_PATH = "/entry/demo";
@@ -54,7 +54,7 @@ export const Route = createFileRoute("/talc-tv")({
           "@context": "https://schema.org",
           "@type": "Service",
           name: "TALC.tv Verified Trade Blast",
-          provider: { "@type": "Organization", name: "EyeSpyR", url: SITE_URL },
+          provider: { "@type": "Organization", name: "EyeSpyR", url: "https://eyespyr.com" },
           serviceType: "Verified social syndication and guest-post SEO",
           areaServed: "Canada",
           description: DESC,

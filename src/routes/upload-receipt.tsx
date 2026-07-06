@@ -6,7 +6,7 @@ import { submitReceipt } from "@/lib/api";
 import ogImg from "@/assets/og-home.jpg";
 
 
-const SITE_URL = "https://eyespyr.com";
+const SITE_URL = "";
 const OG_IMAGE = `${SITE_URL}${ogImg}`;
 
 const TITLE = "Upload a Receipt — EyeSpyR Verified Review";

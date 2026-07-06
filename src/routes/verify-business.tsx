@@ -5,7 +5,7 @@ import { PageHero } from "@/components/PageHero";
 import { submitCredentials } from "@/lib/api";
 import ogImg from "@/assets/og-eyespyr.jpg";
 
-const SITE_URL = "https://eyespyr.com";
+const SITE_URL = "";
 const OG_IMAGE = `${SITE_URL}${ogImg}`;
 
 const TITLE = "Verify Your Business — Upload Credentials to EyeSpyR";
