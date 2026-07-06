@@ -197,24 +197,24 @@ const guestPosts: GuestPost[] = [
 function TalcTvPage() {
   return (
     <SiteLayout>
-      <PageHero
-        eyebrow="EyeSpyR · Distribution Layer"
-        title="TALC.TV"
-        accent="BLAST"
-        lead="Verified trade wins pushed to every feed the moment your score moves. Five social channels, three quarterly guest-post placements, every link dofollow to your public ledger."
-        backgroundImage={heroAsset.url}
-        backgroundImageAlt="TALC.tv verified trade blast hero banner"
-        backgroundFit="contain"
-        backgroundDim="light"
-        heroLink={IAM_TARGET_URL}
-        heroLinkLabel="Visit Industry Army Marketing"
-        onHeroLinkClick={() =>
+      <HeroBanner
+        image={heroAsset.url}
+        imageAlt="TALC.tv — EyeSpyR verified trade blast"
+        href={IAM_TARGET_URL}
+        hrefLabel="Visit Industry Army Marketing"
+        onHrefClick={() =>
           trackEvent({ name: "hero_outbound_click", url: IAM_TARGET_URL, page: "/talc-tv" })
         }
+        caption="Verified trade wins broadcast to every feed the moment your score moves — every link dofollow to your public ledger."
       >
-        {/* Visible overlay text block with clickable dofollow blast/guest-post targets */}
-        <div className="mx-auto mt-8 max-w-3xl rounded-xl border border-border/60 bg-background/70 p-5 backdrop-blur">
-          <p className="mono-label text-[color:var(--acid)]">Live Blast Targets · dofollow</p>
+        <Link to="/verify-business" className="acid-btn">Enroll My Business</Link>
+        <Link to="/transparency" className="ghost-btn">See Score Rules</Link>
+      </HeroBanner>
+
+      {/* Live blast targets — dofollow + UTM tagged */}
+      <section className="mx-auto max-w-4xl px-5 pb-8 pt-2 sm:px-8">
+        <div className="rounded-xl border border-border/60 bg-[color:var(--surface)]/40 p-5">
+          <p className="mono-label text-center text-[color:var(--acid)]">Live Blast Targets · dofollow</p>
           <ul className="mt-3 flex flex-wrap justify-center gap-2 text-xs">
             {channels.map((c) => (
               <li key={c.channel}>
@@ -253,12 +253,7 @@ function TalcTvPage() {
             ))}
           </ul>
         </div>
-
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link to="/verify-business" className="acid-btn">Enroll My Business</Link>
-          <Link to="/transparency" className="ghost-btn">See Score Rules</Link>
-        </div>
-      </PageHero>
+      </section>
 
       {/* What TALC.tv is */}
       <section className="mx-auto max-w-5xl px-5 py-16 sm:px-8">
