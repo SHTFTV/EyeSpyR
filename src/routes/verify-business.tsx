@@ -259,6 +259,9 @@ function QueuedCard({ state, onReset }: { state: Extract<State, { kind: "queued"
           Reference · <span className="text-[color:var(--acid)]">{state.ref}</span>
         </h2>
         <p className="mx-auto mt-4 max-w-lg text-sm text-muted-foreground">{state.message}</p>
+        {state.demo && (
+          <p className="mono-label mt-2 text-muted-foreground">DEMO MODE · LIVE API UNREACHABLE</p>
+        )}
       </div>
 
       <div>
@@ -279,9 +282,11 @@ function QueuedCard({ state, onReset }: { state: Extract<State, { kind: "queued"
       </div>
 
       <div className="flex flex-wrap justify-center gap-3">
-        <Link to="/transparency" className="acid-btn">See Scoring Rules</Link>
+        <Link to="/entry/$id" params={{ id: state.ref }} className="acid-btn">View Public Ledger Entry</Link>
+        <Link to="/transparency" className="ghost-btn">See Scoring Rules</Link>
         <button onClick={onReset} className="ghost-btn">Submit Another</button>
       </div>
+
     </div>
   );
 }
