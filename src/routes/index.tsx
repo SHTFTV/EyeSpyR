@@ -4,6 +4,7 @@ import { PageHero } from "@/components/PageHero";
 import { ScanBar } from "@/components/ScanBar";
 import { EyeMark } from "@/components/EyeMark";
 import ogHome from "@/assets/og-home.jpg";
+import heroImg from "@/assets/hero-eyespyr.jpg";
 
 const SITE_URL = "https://eyespyr.com";
 const OG_IMAGE = `${SITE_URL}${ogHome}`;
@@ -74,6 +75,7 @@ function Index() {
         title="THE TRUST"
         accent="STANDARD"
         lead="The verification and quality-control engine behind every IAM contractor. Real-time monitoring. Un-riggable scores. Territory-exclusive."
+        backgroundImage={heroImg}
       >
         <ScanBar />
         <div className="mt-8 flex flex-wrap justify-center gap-3">
