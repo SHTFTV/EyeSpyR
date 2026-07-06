@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
-import { API_BASE } from "@/lib/api";
+import { submitCredentials } from "@/lib/api";
 import ogImg from "@/assets/og-eyespyr.jpg";
 
 const SITE_URL = "https://eyespyr.com";
@@ -45,10 +45,19 @@ type CredFile = { type: string; file: File };
 type State =
   | { kind: "idle" }
   | { kind: "submitting" }
-  | { kind: "queued"; ref: string; message: string; timeline: TimelineEntry[] }
+  | { kind: "queued"; ref: string; message: string; timeline: TimelineEntry[]; demo: boolean }
   | { kind: "error"; message: string };
 
 type TimelineEntry = { label: string; status: "pending" | "verifying" | "verified"; note?: string };
+
+const CRED_FIELD_MAP: Record<string, string> = {
+  business_license: "businessLicense",
+  trade_ticket: "tradeTicket",
+  insurance: "insuranceCertificate",
+  wcb: "wcbProof",
+  accreditation: "accreditation",
+  other: "otherCredential",
+};
 
 function VerifyBusiness() {
   const [state, setState] = useState<State>({ kind: "idle" });
@@ -62,18 +71,41 @@ function VerifyBusiness() {
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setState({ kind: "submitting" });
-    const form = new FormData(e.currentTarget);
-    for (const c of creds) form.append(`credential:${c.type}`, c.file, c.file.name);
 
-    try {
-      const res = await fetch(`${API_BASE}/credentials`, { method: "POST", body: form });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = (await res.json().catch(() => ({}))) as { reference?: string };
-      setState(buildQueuedState(data.reference, creds, "Submitted. Each credential is verified against the issuing body — most complete within one business day."));
-    } catch {
-      setState(buildQueuedState(undefined, creds, "Submitted to the queue in demo mode. Live verification runs when the API is reachable."));
+    // Build payload matching the backend spec exactly.
+    const raw = new FormData(e.currentTarget);
+    const payload = new FormData();
+    payload.set("legalName", String(raw.get("businessName") ?? ""));
+    payload.set("operatingName", String(raw.get("businessName") ?? ""));
+    payload.set("contactEmail", String(raw.get("email") ?? ""));
+    payload.set("registration", String(raw.get("registration") ?? ""));
+    payload.set("trade", String(raw.get("trade") ?? ""));
+    payload.set("territory", String(raw.get("territory") ?? ""));
+    payload.set("website", String(raw.get("website") ?? ""));
+    payload.set("years", String(raw.get("years") ?? ""));
+    payload.set("contactName", String(raw.get("contactName") ?? ""));
+    payload.set("contactRole", String(raw.get("contactRole") ?? ""));
+    payload.set("phone", String(raw.get("phone") ?? ""));
+    payload.set("notes", String(raw.get("notes") ?? ""));
+    payload.set("notifyOnStatusChange", raw.get("notify") ? "true" : "false");
+    for (const c of creds) {
+      const field = CRED_FIELD_MAP[c.type] ?? `credential_${c.type}`;
+      payload.append(field, c.file, c.file.name);
     }
+
+    const result = await submitCredentials(payload);
+    setState(
+      buildQueuedState(
+        result.businessId,
+        creds,
+        result.demo
+          ? "Submitted to the queue in demo mode. Live verification runs when the API is reachable."
+          : "Submitted. Each credential is verified against the issuing body — you'll get an email at every status change.",
+        !!result.demo,
+      ),
+    );
   }
+
 
   return (
     <SiteLayout>
@@ -164,6 +196,11 @@ function VerifyBusiness() {
                 <input type="checkbox" name="exclusive" required className="mt-1 h-4 w-4 accent-[color:var(--acid)]" />
                 <span>I understand IAM territories are one-per-100K population, one trade per operator, and are awarded on a first-verified basis.</span>
               </label>
+              <label className="flex cursor-pointer items-start gap-3 text-sm text-muted-foreground">
+                <input type="checkbox" name="notify" defaultChecked className="mt-1 h-4 w-4 accent-[color:var(--acid)]" />
+                <span>Email me at every status change — <span className="text-foreground/80">received → identity check → verifying → verified/flagged → resolved</span>.</span>
+              </label>
+
             </fieldset>
 
             {state.kind === "error" && <p className="mono-label text-[color:var(--acid)]">{state.message}</p>}
@@ -181,9 +218,14 @@ function VerifyBusiness() {
   );
 }
 
-function buildQueuedState(ref: string | undefined, creds: CredFile[], message: string): Extract<State, { kind: "queued" }> {
+function buildQueuedState(
+  ref: string | undefined,
+  creds: CredFile[],
+  message: string,
+  demo: boolean,
+): Extract<State, { kind: "queued" }> {
   const timeline: TimelineEntry[] = [
-    { label: "Application received", status: "verified", note: "Entry logged" },
+    { label: "Application received", status: "verified", note: "Entry logged · confirmation email sent" },
     { label: "Identity check · CRA / BC Registry", status: "verifying" },
     ...creds.map((c) => ({
       label: `${prettyCredLabel(c.type)} · ${c.file.name}`,
@@ -198,8 +240,10 @@ function buildQueuedState(ref: string | undefined, creds: CredFile[], message: s
     ref: ref ?? "BIZ-" + Math.random().toString(36).slice(2, 8).toUpperCase(),
     message,
     timeline,
+    demo,
   };
 }
+
 
 function prettyCredLabel(id: string): string {
   const match = CRED_TYPES.find((c) => c.id === id);
@@ -215,6 +259,9 @@ function QueuedCard({ state, onReset }: { state: Extract<State, { kind: "queued"
           Reference · <span className="text-[color:var(--acid)]">{state.ref}</span>
         </h2>
         <p className="mx-auto mt-4 max-w-lg text-sm text-muted-foreground">{state.message}</p>
+        {state.demo && (
+          <p className="mono-label mt-2 text-muted-foreground">DEMO MODE · LIVE API UNREACHABLE</p>
+        )}
       </div>
 
       <div>
@@ -235,9 +282,11 @@ function QueuedCard({ state, onReset }: { state: Extract<State, { kind: "queued"
       </div>
 
       <div className="flex flex-wrap justify-center gap-3">
-        <Link to="/transparency" className="acid-btn">See Scoring Rules</Link>
+        <Link to="/entry/$id" params={{ id: state.ref }} className="acid-btn">View Public Ledger Entry</Link>
+        <Link to="/transparency" className="ghost-btn">See Scoring Rules</Link>
         <button onClick={onReset} className="ghost-btn">Submit Another</button>
       </div>
+
     </div>
   );
 }

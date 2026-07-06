@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
+import { getEntryDetail, statusColor, statusLabel, type EntryDetail } from "@/lib/api";
 import ogImg from "@/assets/og-home.jpg";
+
 
 const SITE_URL = "https://eyespyr.com";
 const OG_IMAGE = `${SITE_URL}${ogImg}`;
@@ -11,6 +13,14 @@ const DESC =
   "Full breakdown of how verified credentials and weighted receipts move the EyeSpyR score — including how negative reviews land. No black box.";
 
 export const Route = createFileRoute("/transparency")({
+  loader: async () => {
+    // Pull two live sample entries from the API; fall back to demo data automatically.
+    const [receipt, credential] = await Promise.all([
+      getEntryDetail("REC-99281-XM"),
+      getEntryDetail("BIZ-7731-LH"),
+    ]);
+    return { receipt, credential };
+  },
   head: () => ({
     meta: [
       { title: TITLE },
@@ -29,8 +39,26 @@ export const Route = createFileRoute("/transparency")({
     ],
     links: [{ rel: "canonical", href: `${SITE_URL}/transparency` }],
   }),
+  errorComponent: ({ error }) => (
+    <SiteLayout>
+      <div className="mx-auto max-w-2xl px-5 py-24 text-center">
+        <p className="eyebrow text-[color:var(--acid)]">Ledger unavailable</p>
+        <h1 className="mt-3 font-display text-3xl font-black uppercase">Couldn't load transparency data</h1>
+        <p className="mt-3 text-sm text-muted-foreground">{error.message}</p>
+      </div>
+    </SiteLayout>
+  ),
+  notFoundComponent: () => (
+    <SiteLayout>
+      <div className="mx-auto max-w-2xl px-5 py-24 text-center">
+        <p className="eyebrow text-[color:var(--acid)]">404</p>
+        <h1 className="mt-3 font-display text-3xl font-black uppercase">Nothing here</h1>
+      </div>
+    </SiteLayout>
+  ),
   component: Transparency,
 });
+
 
 const weights = [
   { tag: "40%", label: "Verified Receipts", body: "Reviews backed by an uploaded receipt or invoice that our verification pass confirms against the operator." },
@@ -49,18 +77,16 @@ const rules = [
   { t: "No pay-to-play", b: "Pro plan buys monitoring and alerting. It does not buy score movement. There is no path to a paid rank." },
 ];
 
-const timeline = [
-  { when: "2026-06-04 14:22", tag: "CREDENTIAL", status: "verified", body: "Red Seal Plumbing certificate — validated against ITA BC registry." },
-  { when: "2026-06-04 14:24", tag: "CREDENTIAL", status: "verified", body: "WCB clearance letter — active, no outstanding claims." },
-  { when: "2026-06-05 09:11", tag: "RECEIPT", status: "weighted", body: "Invoice #4471 uploaded by customer · $2,340 · verified against operator ledger. Review: 5.0" },
-  { when: "2026-06-11 17:48", tag: "OPEN-WEB", status: "logged", body: "New Google review · 4.0 · anonymous · aggregated at standard weight." },
-  { when: "2026-06-14 08:02", tag: "SECURITY", status: "flagged", body: "TLS certificate expiring in 14 days. Alert sent to operator. Score impact: -0.02 pending." },
-  { when: "2026-06-14 11:30", tag: "SECURITY", status: "resolved", body: "Operator renewed certificate. Flag cleared. Score restored." },
-  { when: "2026-06-20 19:15", tag: "RECEIPT", status: "weighted", body: "Invoice #4489 uploaded · $890 · verified. Review: 2.0 — 'callback delayed'. Full text public." },
-  { when: "2026-06-21 07:44", tag: "DISPUTE", status: "logged", body: "Operator responded on Invoice #4489. Response appended, original review unchanged." },
-];
+
+
 
 function Transparency() {
+  const { receipt, credential } = Route.useLoaderData() as {
+    receipt: EntryDetail & { demo?: boolean };
+    credential: EntryDetail & { demo?: boolean };
+  };
+  const isDemo = !!(receipt.demo || credential.demo);
+
   return (
     <SiteLayout>
       <PageHero
@@ -108,34 +134,29 @@ function Transparency() {
         </div>
       </section>
 
-      {/* Timeline */}
+
+
+      {/* Live timeline (real API with fallback) */}
       <section className="mx-auto max-w-5xl px-5 py-16 sm:px-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="eyebrow">Verification Timeline · Example Operator</p>
+            <p className="eyebrow">
+              Live Verification Timeline
+              {isDemo && <span className="ml-2 text-muted-foreground">· DEMO MODE</span>}
+            </p>
             <h2 className="mt-2 font-display text-3xl font-black uppercase sm:text-4xl">
               Every event, <span className="text-[color:var(--acid)]">on the record</span>
             </h2>
           </div>
           <p className="max-w-sm text-sm text-muted-foreground">
-            Every operator profile carries a public timeline like this. Verified, weighted, flagged, resolved, disputed — all of it, in order.
+            Pulled live from the ledger API — two sample entries: one verified operator credential and one weighted consumer receipt.
           </p>
         </div>
 
-        <ol className="mt-10 space-y-3">
-          {timeline.map((e, i) => (
-            <li key={i} className="panel grid gap-4 p-5 sm:grid-cols-[190px_120px_1fr]">
-              <p className="mono-label text-muted-foreground">{e.when}</p>
-              <div className="flex items-center gap-2">
-                <StatusDot status={e.status} />
-                <span className="mono-label" style={{ color: statusColor(e.status) }}>
-                  {e.tag} · {e.status.toUpperCase()}
-                </span>
-              </div>
-              <p className="text-sm text-foreground/90">{e.body}</p>
-            </li>
-          ))}
-        </ol>
+        <div className="mt-10 grid gap-8 lg:grid-cols-2">
+          <EntryPreview entry={credential} label="Operator Credential" />
+          <EntryPreview entry={receipt} label="Consumer Receipt" />
+        </div>
       </section>
 
       {/* CTA */}
@@ -158,18 +179,55 @@ function Transparency() {
   );
 }
 
-function statusColor(status: string): string {
-  if (status === "verified" || status === "weighted" || status === "resolved") return "var(--acid)";
-  if (status === "flagged") return "#ff8a3d";
-  return "color-mix(in oklab, white 60%, transparent)";
-}
-
-function StatusDot({ status }: { status: string }) {
+function EntryPreview({ entry, label }: { entry: EntryDetail; label: string }) {
+  const positive = entry.scoreWeightEffect.trim().startsWith("+");
   return (
-    <span
-      aria-hidden
-      className="inline-block h-2 w-2"
-      style={{ background: statusColor(status), boxShadow: `0 0 8px ${statusColor(status)}` }}
-    />
+    <div className="panel p-6">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="mono-label text-muted-foreground">{label}</p>
+          <p className="mt-1 font-display text-lg font-black uppercase">{entry.id}</p>
+        </div>
+        <p
+          className="font-display text-2xl font-black"
+          style={{ color: positive ? "var(--acid)" : "#ff5a3d" }}
+        >
+          {entry.scoreWeightEffect}
+        </p>
+      </div>
+
+      <ol className="mt-5 space-y-2">
+        {entry.auditTrail.slice(0, 4).map((e, i) => {
+          const color = statusColor(e.status);
+          return (
+            <li key={i} className="grid gap-2 border-l-2 pl-3" style={{ borderColor: color }}>
+              <div className="flex items-center gap-2">
+                <span
+                  aria-hidden
+                  className="inline-block h-2 w-2"
+                  style={{ background: color, boxShadow: `0 0 8px ${color}` }}
+                />
+                <span className="mono-label" style={{ color }}>
+                  {statusLabel(e.status)}
+                </span>
+                <span className="mono-label text-muted-foreground">
+                  {new Date(e.timestamp).toISOString().slice(0, 16).replace("T", " ")}
+                </span>
+              </div>
+              <p className="text-xs leading-relaxed text-foreground/90">{e.event}</p>
+            </li>
+          );
+        })}
+      </ol>
+
+      <Link
+        to="/entry/$id"
+        params={{ id: entry.id }}
+        className="ghost-btn mt-5 inline-flex text-xs"
+      >
+        View Full Audit Trail →
+      </Link>
+    </div>
   );
 }
+

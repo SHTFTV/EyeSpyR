@@ -2,8 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
-import { API_BASE } from "@/lib/api";
+import { submitReceipt } from "@/lib/api";
 import ogImg from "@/assets/og-home.jpg";
+
 
 const SITE_URL = "https://eyespyr.com";
 const OG_IMAGE = `${SITE_URL}${ogImg}`;
@@ -35,7 +36,7 @@ export const Route = createFileRoute("/upload-receipt")({
 type State =
   | { kind: "idle" }
   | { kind: "submitting" }
-  | { kind: "queued"; ref: string; message: string }
+  | { kind: "queued"; ref: string; message: string; demo: boolean }
   | { kind: "error"; message: string };
 
 function UploadReceipt() {
@@ -46,27 +47,33 @@ function UploadReceipt() {
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setState({ kind: "submitting" });
-    const form = new FormData(e.currentTarget);
-    form.set("rating", String(rating));
 
-    try {
-      const res = await fetch(`${API_BASE}/receipts`, { method: "POST", body: form });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = (await res.json().catch(() => ({}))) as { reference?: string };
-      setState({
-        kind: "queued",
-        ref: data.reference ?? demoRef(),
-        message: "Uploaded. Verification pending — you'll get an email when it's weighted.",
-      });
-    } catch {
-      // Graceful demo fallback — matches the scan flow's behavior.
-      setState({
-        kind: "queued",
-        ref: demoRef(),
-        message: "Uploaded to the queue in demo mode. Live verification runs when the API is reachable.",
-      });
-    }
+    // Build payload matching the backend spec exactly.
+    const raw = new FormData(e.currentTarget);
+    const payload = new FormData();
+    payload.set("operatorName", String(raw.get("operator") ?? ""));
+    payload.set("invoiceNumber", String(raw.get("invoice") ?? ""));
+    payload.set("invoiceDate", String(raw.get("serviceDate") ?? ""));
+    payload.set("amount", String(raw.get("amount") ?? ""));
+    payload.set("starRating", String(rating));
+    payload.set("reviewText", String(raw.get("review") ?? ""));
+    payload.set("consumerEmail", String(raw.get("email") ?? ""));
+    payload.set("pipedaConsent", raw.get("consent") ? "true" : "false");
+    payload.set("notifyOnStatusChange", raw.get("notify") ? "true" : "false");
+    const file = raw.get("receipt");
+    if (file instanceof File) payload.set("receiptFile", file, file.name);
+
+    const result = await submitReceipt(payload);
+    setState({
+      kind: "queued",
+      ref: result.referenceId,
+      demo: !!result.demo,
+      message: result.demo
+        ? "Queued in demo mode. Once the API is reachable, verification runs and you'll get an email at every status change."
+        : "Received. You'll get an email at each status change — checking → weighted or flagged → resolved.",
+    });
   }
+
 
   return (
     <SiteLayout>
@@ -157,11 +164,19 @@ function UploadReceipt() {
             />
 
             <label className="flex cursor-pointer items-start gap-3 text-sm text-muted-foreground">
+              <input type="checkbox" name="notify" defaultChecked className="mt-1 h-4 w-4 accent-[color:var(--acid)]" />
+              <span>
+                Email me at every status change — <span className="text-foreground/80">received → checking → verified/weighted/flagged → resolved</span>.
+              </span>
+            </label>
+
+            <label className="flex cursor-pointer items-start gap-3 text-sm text-muted-foreground">
               <input type="checkbox" name="consent" required className="mt-1 h-4 w-4 accent-[color:var(--acid)]" />
               <span>
                 I confirm the receipt is genuine and I authorize EyeSpyR to verify it against the operator's records. PIPEDA-compliant handling applies.
               </span>
             </label>
+
 
             {state.kind === "error" && <p className="mono-label text-[color:var(--acid)]">{state.message}</p>}
 
@@ -175,11 +190,10 @@ function UploadReceipt() {
   );
 }
 
-function demoRef() {
-  return "RCPT-" + Math.random().toString(36).slice(2, 8).toUpperCase();
-}
 
-function SuccessCard({ state, onReset }: { state: { ref: string; message: string }; onReset: () => void }) {
+
+
+function SuccessCard({ state, onReset }: { state: { ref: string; message: string; demo: boolean }; onReset: () => void }) {
   return (
     <div className="panel border-[color:var(--acid)] p-8 text-center shadow-[0_0_60px_-30px_var(--acid)]">
       <p className="eyebrow">Received</p>
@@ -187,11 +201,14 @@ function SuccessCard({ state, onReset }: { state: { ref: string; message: string
         Reference · <span className="text-[color:var(--acid)]">{state.ref}</span>
       </h2>
       <p className="mx-auto mt-4 max-w-md text-sm text-muted-foreground">{state.message}</p>
+      {state.demo && (
+        <p className="mono-label mt-2 text-muted-foreground">DEMO MODE · LIVE API UNREACHABLE</p>
+      )}
       <div className="mt-8 grid gap-3 text-left sm:grid-cols-3">
         {[
-          ["01", "Queued", "Entry logged with reference number."],
-          ["02", "Verifying", "Cross-check against operator ledger + issuing body."],
-          ["03", "Weighted", "Verified → published to public timeline with higher weight."],
+          ["01", "Received", "Entry logged with reference number. Email sent."],
+          ["02", "Checking", "OCR + cross-check against operator ledger. Email sent."],
+          ["03", "Weighted / Flagged", "Verified → published to public ledger. Email sent."],
         ].map(([n, t, b]) => (
           <div key={n} className="border border-border p-4">
             <p className="font-display text-3xl font-black text-[color:var(--acid)]">{n}</p>
@@ -201,12 +218,14 @@ function SuccessCard({ state, onReset }: { state: { ref: string; message: string
         ))}
       </div>
       <div className="mt-8 flex flex-wrap justify-center gap-3">
-        <Link to="/transparency" className="acid-btn">See How Scoring Works</Link>
+        <Link to="/entry/$id" params={{ id: state.ref }} className="acid-btn">View Public Ledger Entry</Link>
+        <Link to="/transparency" className="ghost-btn">See How Scoring Works</Link>
         <button onClick={onReset} className="ghost-btn">Upload Another</button>
       </div>
     </div>
   );
 }
+
 
 type FieldProps = React.InputHTMLAttributes<HTMLInputElement> & { label: string; name: string };
 function Field({ label, name, ...rest }: FieldProps) {
