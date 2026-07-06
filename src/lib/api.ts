@@ -26,6 +26,22 @@ export interface AuditEvent {
   status: IntegrityStatus;
 }
 
+export interface ScoreFactor {
+  id: string;
+  label: string;
+  kind: "credential" | "positive_receipt" | "negative_receipt" | "penalty";
+  status: IntegrityStatus;
+  weightPct: number; // signed contribution to overall score, e.g. +12.5 or -15
+  detail?: string;
+  entryId?: string; // deep-link to /entry/{entryId}
+}
+
+export interface ScoreBreakdown {
+  baseline: number; // starting score before factors, e.g. 50
+  total: number; // final score after all factors
+  factors: ScoreFactor[];
+}
+
 export interface EntryDetail {
   id: string;
   type: EntryType;
@@ -39,6 +55,31 @@ export interface EntryDetail {
   reviewText?: string;
   amount?: number;
   invoiceDate?: string;
+  scoreBreakdown?: ScoreBreakdown;
+}
+
+// ------------------------------------------------------------------
+// Allowed status transitions — enforced on the server before emitting
+// timeline updates or status-change emails. Frontend uses the same map
+// to render the timeline and reject impossible states.
+//
+//   received → identity_check → verifying → verified | weighted | flagged
+//   flagged  → resolved
+//   verified | weighted → resolved
+// ------------------------------------------------------------------
+export const ALLOWED_TRANSITIONS: Record<IntegrityStatus, IntegrityStatus[]> = {
+  received: ["identity_check", "verifying", "flagged"],
+  identity_check: ["verifying", "flagged"],
+  verifying: ["verified", "weighted", "flagged"],
+  verified: ["resolved", "flagged"],
+  weighted: ["resolved", "flagged"],
+  flagged: ["resolved"],
+  resolved: [],
+  logged: [],
+};
+
+export function isAllowedTransition(from: IntegrityStatus, to: IntegrityStatus): boolean {
+  return ALLOWED_TRANSITIONS[from]?.includes(to) ?? false;
 }
 
 export interface ReceiptResponse {
@@ -124,6 +165,31 @@ export async function subscribeToEntryUpdates(
   }
 }
 
+/**
+ * Remove an email from status-change notifications for a ledger entry.
+ * Backend contract: POST {API_BASE}/api/notify/unsubscribe
+ *   { entryId: string, email: string, token?: string }
+ * If `token` is provided (from an email footer one-click link), the server
+ * skips the email match and uses the token instead.
+ */
+export async function unsubscribeFromEntryUpdates(
+  entryId: string,
+  email: string,
+  token?: string,
+): Promise<NotifySubscribeResponse> {
+  try {
+    const res = await fetch(`${API_BASE}/api/notify/unsubscribe`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ entryId, email, token }),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return (await res.json()) as NotifySubscribeResponse;
+  } catch {
+    return { success: true, entryId, email, demo: true };
+  }
+}
+
 export async function getEntryDetail(id: string): Promise<EntryDetail & { demo?: boolean }> {
   try {
     const res = await fetch(`${API_BASE}/api/entries/${encodeURIComponent(id)}`);
@@ -181,6 +247,18 @@ export function demoEntry(id: string): EntryDetail {
         { timestamp: "2026-06-04T15:22:00Z", event: "Liability insurance certificate confirmed with insurer", status: "verified" },
         { timestamp: "2026-06-04T15:30:00Z", event: "Territory locked · Surrey, BC · Plumbing", status: "resolved" },
       ],
+      scoreBreakdown: {
+        baseline: 50,
+        total: 88,
+        factors: [
+          { id: "cred-redseal", label: "Red Seal Plumbing (ITA BC)", kind: "credential", status: "verified", weightPct: +12, detail: "Certificate #RS-88231 confirmed with issuing body." },
+          { id: "cred-wcb", label: "WCB Clearance Letter", kind: "credential", status: "verified", weightPct: +8, detail: "Active, zero outstanding claims." },
+          { id: "cred-liability", label: "$2M Liability Insurance", kind: "credential", status: "verified", weightPct: +8, detail: "Verified directly with insurer." },
+          { id: "rec-4471", label: "Receipt REC-99281-XM · 5★", kind: "positive_receipt", status: "weighted", weightPct: +6, detail: "OCR line-item match against operator ledger.", entryId: "REC-99281-XM" },
+          { id: "rec-3902", label: "Receipt REC-31022-QQ · 2★", kind: "negative_receipt", status: "weighted", weightPct: -4, detail: "Verified negative review — carries equal weight to positive.", entryId: "REC-31022-QQ" },
+          { id: "penalty-response", label: "No public response to negative review", kind: "penalty", status: "flagged", weightPct: -2, detail: "Operator has 30 days to respond publicly before penalty clears." },
+        ],
+      },
     };
   }
   return {
@@ -200,5 +278,15 @@ export function demoEntry(id: string): EntryDetail {
       { timestamp: "2026-07-06T11:02:00Z", event: "OCR line-item match completed against operator ledger", status: "weighted" },
       { timestamp: "2026-07-06T11:04:00Z", event: "Weight applied — verified receipt (3× anonymous baseline)", status: "weighted" },
     ],
+    scoreBreakdown: {
+      baseline: 0,
+      total: 12.5,
+      factors: [
+        { id: "base-star", label: "5★ consumer rating", kind: "positive_receipt", status: "weighted", weightPct: +4, detail: "Base weight for a 5-star anonymous rating." },
+        { id: "ocr-match", label: "OCR line-item match", kind: "positive_receipt", status: "verified", weightPct: +6, detail: "Invoice #4471 matched operator ledger exactly." },
+        { id: "invoice-amount", label: "Invoice amount above median", kind: "positive_receipt", status: "weighted", weightPct: +2.5, detail: "$2,340 vs. category median $890 — real job, not a token receipt." },
+      ],
+    },
   };
 }
+

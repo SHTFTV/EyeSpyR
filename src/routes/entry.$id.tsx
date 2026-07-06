@@ -7,8 +7,10 @@ import {
   statusColor,
   statusLabel,
   subscribeToEntryUpdates,
+  unsubscribeFromEntryUpdates,
   type EntryDetail,
   type IntegrityStatus,
+  type ScoreFactor,
 } from "@/lib/api";
 import ogImg from "@/assets/og-home.jpg";
 
@@ -158,7 +160,14 @@ function EntryDetailPage() {
         </ol>
       </section>
 
-      {/* Email alerts */}
+      {/* Public score breakdown */}
+      {entry.scoreBreakdown && (
+        <section className="mx-auto max-w-5xl px-5 py-8 sm:px-8">
+          <ScoreBreakdownPanel breakdown={entry.scoreBreakdown} />
+        </section>
+      )}
+
+      {/* Email alerts + unsubscribe */}
       <section className="mx-auto max-w-5xl px-5 pb-4 sm:px-8">
         <EmailAlerts entryId={entry.id} />
       </section>
