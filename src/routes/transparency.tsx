@@ -134,11 +134,8 @@ function Transparency() {
         </div>
       </section>
 
-      {/* Timeline */}
-      <section className="mx-auto max-w-5xl px-5 py-16 sm:px-8">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="eyebrow">Verification Timeline · Example Operator</p>
+
+
       {/* Live timeline (real API with fallback) */}
       <section className="mx-auto max-w-5xl px-5 py-16 sm:px-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
