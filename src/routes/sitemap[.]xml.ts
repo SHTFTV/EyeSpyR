@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import type {} from "@tanstack/react-start";
+import { getRequest } from "@tanstack/react-start/server";
 
-const BASE_URL = "https://eyespyr.com";
-
+const FALLBACK_ORIGIN = "https://eyespyr.com";
 
 interface SitemapEntry {
   path: string;
@@ -10,10 +9,24 @@ interface SitemapEntry {
   priority?: string;
 }
 
+function originFromRequest(): string {
+  try {
+    const req = getRequest();
+    const proto = req.headers.get("x-forwarded-proto") ?? "https";
+    const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host");
+    if (host) return `${proto}://${host}`;
+  } catch {
+    /* no request context */
+  }
+  return FALLBACK_ORIGIN;
+}
+
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
+        const BASE_URL = originFromRequest();
+
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/how-it-works", changefreq: "monthly", priority: "0.8" },
@@ -28,8 +41,6 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/entry/REC-99281-XM", changefreq: "weekly", priority: "0.6" },
           { path: "/entry/BIZ-7731-LH", changefreq: "weekly", priority: "0.6" },
         ];
-
-
 
         const urls = entries.map((e) =>
           [
