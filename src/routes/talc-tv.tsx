@@ -3,29 +3,48 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import heroImg from "@/assets/hero-eyespyr.jpg";
 import ogImg from "@/assets/og-eyespyr.jpg";
+import {
+  IAM_TARGET_URL,
+  blastUtmUrl,
+  trackEvent,
+  type BlastChannel,
+} from "@/lib/analytics";
 
 const SITE_URL = "https://eyespyr.com";
 const CANONICAL = `${SITE_URL}/talc-tv`;
+const OG_IMAGE = `${SITE_URL}${ogImg}`;
+const DEMO_ENTRY_PATH = "/entry/demo";
 const DESC =
-  "TALC.tv — the EyeSpyR social blast engine. Verified trade wins broadcast to TikTok, Instagram, YouTube Shorts, and X the moment a score moves. Real receipts, real reviews, dofollow backlinks, guest-post syndication.";
+  "TALC.tv — the EyeSpyR social blast engine. Verified trade wins broadcast to TikTok, Instagram, YouTube Shorts, X, and LinkedIn the moment a score moves. Real receipts, real reviews, dofollow backlinks, guest-post syndication.";
 
 export const Route = createFileRoute("/talc-tv")({
   head: () => ({
     meta: [
       { title: "TALC.tv Blast — Verified Trade Wins to Every Feed | EyeSpyR" },
       { name: "description", content: DESC },
-      { name: "keywords", content: "verified contractor social media, trade review syndication, dofollow backlinks contractors, guest post SEO trades, TikTok trade wins, social proof verification, EyeSpyR blast, IAM contractor marketing" },
+      {
+        name: "keywords",
+        content:
+          "verified contractor social media, trade review syndication, dofollow backlinks contractors, guest post SEO trades, TikTok trade wins, social proof verification, EyeSpyR blast, IAM contractor marketing",
+      },
       { property: "og:title", content: "TALC.tv Blast — Broadcast Verified Trade Wins" },
       { property: "og:description", content: DESC },
+      { property: "og:site_name", content: "EyeSpyR" },
       { property: "og:type", content: "article" },
       { property: "og:url", content: CANONICAL },
-      { property: "og:image", content: `${SITE_URL}${ogImg}` },
+      { property: "og:image", content: OG_IMAGE },
+      { property: "og:image:secure_url", content: OG_IMAGE },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "TALC.tv — verified trade blast on every social feed" },
+      { property: "og:locale", content: "en_CA" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:site", content: "@eyespyr" },
+      { name: "twitter:creator", content: "@eyespyr" },
       { name: "twitter:title", content: "TALC.tv Blast — Broadcast Verified Trade Wins" },
       { name: "twitter:description", content: DESC },
-      { name: "twitter:image", content: `${SITE_URL}${ogImg}` },
+      { name: "twitter:image", content: OG_IMAGE },
+      { name: "twitter:image:alt", content: "TALC.tv verified trade blast" },
     ],
     links: [{ rel: "canonical", href: CANONICAL }],
     scripts: [
@@ -53,23 +72,15 @@ export const Route = createFileRoute("/talc-tv")({
               name: "What is TALC.tv?",
               acceptedAnswer: {
                 "@type": "Answer",
-                text: "TALC.tv is EyeSpyR's verified-content blast channel. Every time a contractor's score moves — a new 5★ verified receipt, a completed credential, a resolved dispute — the win is auto-cut into short-form video and pushed to TikTok, Instagram Reels, YouTube Shorts, and X with a dofollow link back to the operator's public ledger page.",
+                text: "TALC.tv is EyeSpyR's verified-content blast channel. Every time a contractor's score moves, the win is auto-cut into short-form video and pushed to TikTok, Instagram Reels, YouTube Shorts, X, and LinkedIn with a dofollow link back to the operator's public ledger page.",
               },
             },
             {
               "@type": "Question",
-              name: "What guest-post backlinks are included?",
+              name: "Are the guest-post backlinks dofollow?",
               acceptedAnswer: {
                 "@type": "Answer",
-                text: "Every active EyeSpyR operator receives three placements per quarter on relevant industry publications — trade journals, regional business news, and category-specific review sites — each linking back to the operator's verified ledger with dofollow attribution.",
-              },
-            },
-            {
-              "@type": "Question",
-              name: "Are the backlinks dofollow?",
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: "Yes. Every TALC.tv guest-post placement carries a dofollow rel attribute passing authority to the operator's ledger URL. Social profile links are nofollow by platform default, but drive branded search volume that feeds the organic loop.",
+                text: "Yes. Every TALC.tv guest-post placement carries a dofollow rel attribute passing authority to the operator's ledger URL.",
               },
             },
           ],
@@ -80,35 +91,106 @@ export const Route = createFileRoute("/talc-tv")({
   component: TalcTvPage,
 });
 
-const channels = [
-  { tag: "01", name: "TikTok", meta: "Short-form vertical · 15–45s cuts", note: "Verified win → auto-caption → hashtag stack tied to trade + region." },
-  { tag: "02", name: "Instagram Reels", meta: "Vertical · 30–60s", note: "Cross-post from TikTok, extra carousel breakdown of the score move." },
-  { tag: "03", name: "YouTube Shorts", meta: "Vertical · 60s max", note: "Dofollow description link back to /entry/{id} ledger page." },
-  { tag: "04", name: "X (Twitter)", meta: "Native video + thread", note: "Score-move alert thread with public audit-trail permalink." },
-  { tag: "05", name: "LinkedIn", meta: "Native video + article", note: "Operator brand-authority push to B2B decision makers." },
+interface ChannelDef {
+  tag: string;
+  name: string;
+  meta: string;
+  note: string;
+  channel: BlastChannel;
+  href: string;
+}
+
+const channels: ChannelDef[] = [
+  {
+    tag: "01",
+    name: "TikTok",
+    meta: "Short-form vertical · 15–45s cuts",
+    note: "Verified win → auto-caption → hashtag stack tied to trade + region.",
+    channel: "tiktok",
+    href: "https://www.tiktok.com/@eyespyr",
+  },
+  {
+    tag: "02",
+    name: "Instagram Reels",
+    meta: "Vertical · 30–60s",
+    note: "Cross-post from TikTok, extra carousel breakdown of the score move.",
+    channel: "instagram",
+    href: "https://www.instagram.com/eyespyr",
+  },
+  {
+    tag: "03",
+    name: "YouTube Shorts",
+    meta: "Vertical · 60s max",
+    note: "Dofollow description link back to /entry/{id} ledger page.",
+    channel: "youtube-shorts",
+    href: "https://www.youtube.com/@eyespyr",
+  },
+  {
+    tag: "04",
+    name: "X (Twitter)",
+    meta: "Native video + thread",
+    note: "Score-move alert thread with public audit-trail permalink.",
+    channel: "x",
+    href: "https://x.com/eyespyr",
+  },
+  {
+    tag: "05",
+    name: "LinkedIn",
+    meta: "Native video + article",
+    note: "Operator brand-authority push to B2B decision makers.",
+    channel: "linkedin",
+    href: "https://www.linkedin.com/company/eyespyr",
+  },
 ];
 
-const guestPosts = [
+interface GuestPost {
+  slot: string;
+  outlet: string;
+  payload: string;
+  keywords: string[];
+  channel: BlastChannel;
+  href: string;
+}
+
+const guestPosts: GuestPost[] = [
   {
     slot: "Guest Post 01",
     outlet: "Regional Trade Journal (category-matched)",
     payload:
       "1,200-word case study framed around the operator's verified win, embedded score badge, one dofollow link to /entry/{id} and one to eyespyr.com.",
-    keywords: ["verified [trade] contractor [city]", "licensed [trade] with real reviews", "how to verify a [trade] before hiring"],
+    keywords: [
+      "verified [trade] contractor [city]",
+      "licensed [trade] with real reviews",
+      "how to verify a [trade] before hiring",
+    ],
+    channel: "guest-post-trade-journal",
+    href: `${IAM_TARGET_URL}/press/trade-journal`,
   },
   {
     slot: "Guest Post 02",
     outlet: "Category review / directory site",
     payload:
       "Author-bio placement with dofollow link, plus in-body citation to the EyeSpyR public ledger as the proof source.",
-    keywords: ["best [trade] near me verified", "trade contractor background check", "consumer receipt verification service"],
+    keywords: [
+      "best [trade] near me verified",
+      "trade contractor background check",
+      "consumer receipt verification service",
+    ],
+    channel: "guest-post-directory",
+    href: `${IAM_TARGET_URL}/press/directory`,
   },
   {
     slot: "Guest Post 03",
     outlet: "Regional business / news publication",
     payload:
       "Op-ed or contributor piece under the operator's name on trust in the trades, published with dofollow author link + operator citation.",
-    keywords: ["trust standard trades industry", "how consumers verify contractors", "PIPEDA-compliant review platform"],
+    keywords: [
+      "trust standard trades industry",
+      "how consumers verify contractors",
+      "PIPEDA-compliant review platform",
+    ],
+    channel: "guest-post-oped",
+    href: `${IAM_TARGET_URL}/press/op-ed`,
   },
 ];
 
@@ -121,7 +203,55 @@ function TalcTvPage() {
         accent="BLAST"
         lead="Verified trade wins pushed to every feed the moment your score moves. Five social channels, three quarterly guest-post placements, every link dofollow to your public ledger."
         backgroundImage={heroImg}
+        backgroundImageAlt="TALC.tv verified trade blast hero banner"
+        heroLink={IAM_TARGET_URL}
+        heroLinkLabel="Visit Industry Army Marketing"
+        onHeroLinkClick={() =>
+          trackEvent({ name: "hero_outbound_click", url: IAM_TARGET_URL, page: "/talc-tv" })
+        }
       >
+        {/* Visible overlay text block with clickable dofollow blast/guest-post targets */}
+        <div className="mx-auto mt-8 max-w-3xl rounded-xl border border-border/60 bg-background/70 p-5 backdrop-blur">
+          <p className="mono-label text-[color:var(--acid)]">Live Blast Targets · dofollow</p>
+          <ul className="mt-3 flex flex-wrap justify-center gap-2 text-xs">
+            {channels.map((c) => (
+              <li key={c.channel}>
+                <a
+                  href={blastUtmUrl(DEMO_ENTRY_PATH, c.channel)}
+                  rel="dofollow noopener"
+                  target="_blank"
+                  onClick={() =>
+                    trackEvent({
+                      name: "blast_click",
+                      channel: c.channel,
+                      url: blastUtmUrl(DEMO_ENTRY_PATH, c.channel),
+                      entryPath: DEMO_ENTRY_PATH,
+                    })
+                  }
+                  className="inline-block rounded-full border border-border/60 px-3 py-1 uppercase tracking-wide hover:border-[color:var(--acid)] hover:text-[color:var(--acid)]"
+                >
+                  {c.name}
+                </a>
+              </li>
+            ))}
+            {guestPosts.map((g) => (
+              <li key={g.channel}>
+                <a
+                  href={g.href}
+                  rel="dofollow noopener"
+                  target="_blank"
+                  onClick={() =>
+                    trackEvent({ name: "guest_post_click", channel: g.channel, url: g.href })
+                  }
+                  className="inline-block rounded-full border border-[color:var(--acid)]/60 px-3 py-1 uppercase tracking-wide text-[color:var(--acid)] hover:bg-[color:var(--acid)]/10"
+                >
+                  {g.slot}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link to="/verify-business" className="acid-btn">Enroll My Business</Link>
           <Link to="/transparency" className="ghost-btn">See Score Rules</Link>
@@ -151,14 +281,46 @@ function TalcTvPage() {
             Five feeds, <span className="text-[color:var(--acid)]">one trigger</span>
           </h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {channels.map((c) => (
-              <div key={c.name} className="panel p-6">
-                <p className="mono-label text-[color:var(--acid)]">{c.tag}</p>
-                <h3 className="mt-2 font-display text-xl font-black uppercase">{c.name}</h3>
-                <p className="mono-label mt-1 text-muted-foreground">{c.meta}</p>
-                <p className="mt-3 text-sm text-foreground/90">{c.note}</p>
-              </div>
-            ))}
+            {channels.map((c) => {
+              const utmHref = blastUtmUrl(DEMO_ENTRY_PATH, c.channel);
+              return (
+                <div key={c.name} className="panel p-6">
+                  <p className="mono-label text-[color:var(--acid)]">{c.tag}</p>
+                  <h3 className="mt-2 font-display text-xl font-black uppercase">{c.name}</h3>
+                  <p className="mono-label mt-1 text-muted-foreground">{c.meta}</p>
+                  <p className="mt-3 text-sm text-foreground/90">{c.note}</p>
+                  <div className="mt-4 flex flex-wrap gap-3 text-xs">
+                    <a
+                      href={c.href}
+                      rel="dofollow noopener"
+                      target="_blank"
+                      onClick={() =>
+                        trackEvent({ name: "blast_click", channel: c.channel, url: c.href })
+                      }
+                      className="text-[color:var(--acid)] underline underline-offset-4"
+                    >
+                      Channel →
+                    </a>
+                    <a
+                      href={utmHref}
+                      rel="dofollow noopener"
+                      target="_blank"
+                      onClick={() =>
+                        trackEvent({
+                          name: "blast_click",
+                          channel: c.channel,
+                          url: utmHref,
+                          entryPath: DEMO_ENTRY_PATH,
+                        })
+                      }
+                      className="text-foreground/80 underline underline-offset-4"
+                    >
+                      Sample blast link (UTM tagged)
+                    </a>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -172,8 +334,7 @@ function TalcTvPage() {
         <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground">
           We syndicate one case study, one directory citation, and one contributor op-ed per
           quarter to publications relevant to your trade and territory. Every placement carries a
-          dofollow link back to your EyeSpyR ledger and a citation to eyespyr.com — passing SEO
-          authority into your public verification page and lifting your branded search footprint.
+          dofollow link back to your EyeSpyR ledger and a citation to eyespyr.com.
         </p>
 
         <div className="mt-10 grid gap-6 md:grid-cols-3">
@@ -190,6 +351,17 @@ function TalcTvPage() {
                   ))}
                 </ul>
               </div>
+              <a
+                href={g.href}
+                rel="dofollow noopener"
+                target="_blank"
+                onClick={() =>
+                  trackEvent({ name: "guest_post_click", channel: g.channel, url: g.href })
+                }
+                className="mt-2 inline-block text-xs text-[color:var(--acid)] underline underline-offset-4"
+              >
+                Visit placement target →
+              </a>
             </article>
           ))}
         </div>
@@ -205,8 +377,12 @@ function TalcTvPage() {
           <ul className="mt-6 space-y-4 text-sm leading-relaxed text-foreground/90">
             <li>
               <strong className="text-[color:var(--acid)]">Dofollow authority:</strong> Every guest
-              post placement passes link equity directly to your public ledger page — Google treats
-              your entry as an authoritative endorsement, not an ad.
+              post placement passes link equity directly to your public ledger page.
+            </li>
+            <li>
+              <strong className="text-[color:var(--acid)]">UTM measurement:</strong> Every blast
+              link is tagged (utm_source, utm_medium=social/referral, utm_campaign=talc_tv_blast)
+              so you can measure which channel drives visits to each /entry page.
             </li>
             <li>
               <strong className="text-[color:var(--acid)]">Branded search lift:</strong> Social
@@ -214,14 +390,9 @@ function TalcTvPage() {
               verified" — the strongest signal Google uses for local trust.
             </li>
             <li>
-              <strong className="text-[color:var(--acid)]">Fresh-content velocity:</strong> Every
-              score move triggers new syndicated content, keeping your citation velocity high — a
-              proven ranking factor for local business search.
-            </li>
-            <li>
               <strong className="text-[color:var(--acid)]">Un-riggable proof:</strong> Because every
               blast links to a public audit trail on the EyeSpyR ledger, the content survives
-              scrutiny. No stripped reviews, no purged case studies.
+              scrutiny.
             </li>
           </ul>
         </div>
