@@ -50,10 +50,10 @@ export function HeroBanner({
         )}
       </div>
       <div className="mx-auto max-w-3xl px-5 pb-14 pt-6 text-center sm:px-8 sm:pb-20 sm:pt-8">
-        <p className="text-base leading-relaxed text-foreground/90 sm:text-lg">
+        <p className="text-lg leading-relaxed text-foreground sm:text-xl sm:leading-[1.55]">
           {caption}
         </p>
-        {children && <div className="mt-6 flex flex-wrap justify-center gap-3">{children}</div>}
+        {children && <div className="mt-7 flex flex-wrap justify-center gap-3">{children}</div>}
       </div>
     </section>
   );
