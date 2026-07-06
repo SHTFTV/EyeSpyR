@@ -3,11 +3,12 @@ import { useState } from "react";
 import { EyeMark, Wordmark } from "./EyeMark";
 
 const links = [
-  { to: "/network", label: "Network" },
   { to: "/how-it-works", label: "How It Works" },
+  { to: "/transparency", label: "Transparency" },
+  { to: "/network", label: "Network" },
   { to: "/pricing", label: "Pricing" },
-  { to: "/eyespyr", label: "The Badge" },
 ] as const;
+
 
 export function SiteNav() {
   const [open, setOpen] = useState(false);

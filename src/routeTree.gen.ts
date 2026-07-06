@@ -9,6 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VerifyBusinessRouteImport } from './routes/verify-business'
+import { Route as UploadReceiptRouteImport } from './routes/upload-receipt'
+import { Route as TransparencyRouteImport } from './routes/transparency'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ScanRouteImport } from './routes/scan'
 import { Route as PricingRouteImport } from './routes/pricing'
@@ -17,6 +20,21 @@ import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as EyespyrRouteImport } from './routes/eyespyr'
 import { Route as IndexRouteImport } from './routes/index'
 
+const VerifyBusinessRoute = VerifyBusinessRouteImport.update({
+  id: '/verify-business',
+  path: '/verify-business',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UploadReceiptRoute = UploadReceiptRouteImport.update({
+  id: '/upload-receipt',
+  path: '/upload-receipt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TransparencyRoute = TransparencyRouteImport.update({
+  id: '/transparency',
+  path: '/transparency',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -61,6 +79,9 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRoute
   '/scan': typeof ScanRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/transparency': typeof TransparencyRoute
+  '/upload-receipt': typeof UploadReceiptRoute
+  '/verify-business': typeof VerifyBusinessRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +91,9 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/scan': typeof ScanRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/transparency': typeof TransparencyRoute
+  '/upload-receipt': typeof UploadReceiptRoute
+  '/verify-business': typeof VerifyBusinessRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +104,9 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRoute
   '/scan': typeof ScanRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/transparency': typeof TransparencyRoute
+  '/upload-receipt': typeof UploadReceiptRoute
+  '/verify-business': typeof VerifyBusinessRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +118,9 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/scan'
     | '/sitemap.xml'
+    | '/transparency'
+    | '/upload-receipt'
+    | '/verify-business'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +130,9 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/scan'
     | '/sitemap.xml'
+    | '/transparency'
+    | '/upload-receipt'
+    | '/verify-business'
   id:
     | '__root__'
     | '/'
@@ -109,6 +142,9 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/scan'
     | '/sitemap.xml'
+    | '/transparency'
+    | '/upload-receipt'
+    | '/verify-business'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,10 +155,34 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   ScanRoute: typeof ScanRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TransparencyRoute: typeof TransparencyRoute
+  UploadReceiptRoute: typeof UploadReceiptRoute
+  VerifyBusinessRoute: typeof VerifyBusinessRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/verify-business': {
+      id: '/verify-business'
+      path: '/verify-business'
+      fullPath: '/verify-business'
+      preLoaderRoute: typeof VerifyBusinessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/upload-receipt': {
+      id: '/upload-receipt'
+      path: '/upload-receipt'
+      fullPath: '/upload-receipt'
+      preLoaderRoute: typeof UploadReceiptRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/transparency': {
+      id: '/transparency'
+      path: '/transparency'
+      fullPath: '/transparency'
+      preLoaderRoute: typeof TransparencyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -183,6 +243,9 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   ScanRoute: ScanRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TransparencyRoute: TransparencyRoute,
+  UploadReceiptRoute: UploadReceiptRoute,
+  VerifyBusinessRoute: VerifyBusinessRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
