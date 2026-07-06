@@ -1,6 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
+import ogImg from "@/assets/og-network.jpg";
+
+const SITE_URL = "https://eyespyr.com";
+const OG_IMAGE = `${SITE_URL}${ogImg}`;
+
 
 const NET_TITLE = "The IAM Network — EyeSpyR Verified Territories";
 const NET_DESC =
@@ -14,12 +19,17 @@ export const Route = createFileRoute("/network")({
       { property: "og:title", content: NET_TITLE },
       { property: "og:description", content: NET_DESC },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "/network" },
+      { property: "og:url", content: `${SITE_URL}/network` },
+      { property: "og:image", content: OG_IMAGE },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: NET_TITLE },
       { name: "twitter:description", content: NET_DESC },
+      { name: "twitter:image", content: OG_IMAGE },
     ],
-    links: [{ rel: "canonical", href: "/network" }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/network` }],
+
   }),
   component: Network,
 });

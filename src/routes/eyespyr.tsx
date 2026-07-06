@@ -2,6 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import { EyeMark, Wordmark } from "@/components/EyeMark";
+import ogImg from "@/assets/og-eyespyr.jpg";
+
+const SITE_URL = "https://eyespyr.com";
+const OG_IMAGE = `${SITE_URL}${ogImg}`;
+
 
 const BADGE_TITLE = "The EyeSpyR Badge — What Verification Means";
 const BADGE_DESC =
@@ -15,12 +20,17 @@ export const Route = createFileRoute("/eyespyr")({
       { property: "og:title", content: BADGE_TITLE },
       { property: "og:description", content: BADGE_DESC },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "/eyespyr" },
+      { property: "og:url", content: `${SITE_URL}/eyespyr` },
+      { property: "og:image", content: OG_IMAGE },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: BADGE_TITLE },
       { name: "twitter:description", content: BADGE_DESC },
+      { name: "twitter:image", content: OG_IMAGE },
     ],
-    links: [{ rel: "canonical", href: "/eyespyr" }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/eyespyr` }],
+
   }),
   component: BadgePage,
 });
