@@ -18,6 +18,7 @@ export function SiteFooter() {
           { to: "/transparency", label: "Scoring Transparency" },
           { to: "/eyespyr", label: "The Badge" },
           { to: "/scan", label: "Free Scan" },
+          { to: "/talc-tv", label: "TALC.tv Blast" },
         ]}/>
         <FooterCol title="Verify" items={[
           { to: "/verify-business", label: "For Businesses" },
