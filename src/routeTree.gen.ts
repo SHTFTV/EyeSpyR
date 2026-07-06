@@ -15,6 +15,7 @@ import { Route as TransparencyRouteImport } from './routes/transparency'
 import { Route as TalcTvRouteImport } from './routes/talc-tv'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ScanRouteImport } from './routes/scan'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as NetworkRouteImport } from './routes/network'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
@@ -50,6 +51,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const ScanRoute = ScanRouteImport.update({
   id: '/scan',
   path: '/scan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PricingRoute = PricingRouteImport.update({
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/how-it-works': typeof HowItWorksRoute
   '/network': typeof NetworkRoute
   '/pricing': typeof PricingRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/scan': typeof ScanRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/talc-tv': typeof TalcTvRoute
@@ -103,6 +110,7 @@ export interface FileRoutesByTo {
   '/how-it-works': typeof HowItWorksRoute
   '/network': typeof NetworkRoute
   '/pricing': typeof PricingRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/scan': typeof ScanRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/talc-tv': typeof TalcTvRoute
@@ -118,6 +126,7 @@ export interface FileRoutesById {
   '/how-it-works': typeof HowItWorksRoute
   '/network': typeof NetworkRoute
   '/pricing': typeof PricingRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/scan': typeof ScanRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/talc-tv': typeof TalcTvRoute
@@ -134,6 +143,7 @@ export interface FileRouteTypes {
     | '/how-it-works'
     | '/network'
     | '/pricing'
+    | '/robots.txt'
     | '/scan'
     | '/sitemap.xml'
     | '/talc-tv'
@@ -148,6 +158,7 @@ export interface FileRouteTypes {
     | '/how-it-works'
     | '/network'
     | '/pricing'
+    | '/robots.txt'
     | '/scan'
     | '/sitemap.xml'
     | '/talc-tv'
@@ -162,6 +173,7 @@ export interface FileRouteTypes {
     | '/how-it-works'
     | '/network'
     | '/pricing'
+    | '/robots.txt'
     | '/scan'
     | '/sitemap.xml'
     | '/talc-tv'
@@ -177,6 +189,7 @@ export interface RootRouteChildren {
   HowItWorksRoute: typeof HowItWorksRoute
   NetworkRoute: typeof NetworkRoute
   PricingRoute: typeof PricingRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   ScanRoute: typeof ScanRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TalcTvRoute: typeof TalcTvRoute
@@ -230,6 +243,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScanRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pricing': {
       id: '/pricing'
       path: '/pricing'
@@ -281,6 +301,7 @@ const rootRouteChildren: RootRouteChildren = {
   HowItWorksRoute: HowItWorksRoute,
   NetworkRoute: NetworkRoute,
   PricingRoute: PricingRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   ScanRoute: ScanRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TalcTvRoute: TalcTvRoute,
