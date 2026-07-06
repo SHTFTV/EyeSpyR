@@ -77,6 +77,12 @@ function Index() {
         accent="STANDARD"
         lead="The verification and quality-control engine behind every IAM contractor. Real-time monitoring. Un-riggable scores. Territory-exclusive."
         backgroundImage={heroImg}
+        backgroundImageAlt="EyeSpyR — the trust standard verification platform hero banner"
+        heroLink={IAM_TARGET_URL}
+        heroLinkLabel="Visit Industry Army Marketing"
+        onHeroLinkClick={() =>
+          trackEvent({ name: "hero_outbound_click", url: IAM_TARGET_URL, page: "/" })
+        }
       >
         <ScanBar />
         <div className="mt-8 flex flex-wrap justify-center gap-3">
