@@ -41,7 +41,7 @@ export const Route = createFileRoute("/how-it-works")({
           step: [
             { "@type": "HowToStep", position: 1, name: "Run Your Free Scan", text: "Drop your URL into the scan bar. In under 60 seconds we return your public reputation score, malware posture, link integrity, and territory status." },
             { "@type": "HowToStep", position: 2, name: "Claim Your City", text: "Territories are one-per-100K population, one trade per operator. If yours is open, you can claim exclusive rights before a competitor does." },
-            { "@type": "HowToStep", position: 3, name: "Go Live & Verified", text: "The EyeSpyR badge activates on your listing. IAM ops confirms business registration and physical presence. Your public score goes live." },
+            { "@type": "HowToStep", position: 3, name: "Upload Credentials & Go Live", text: "Upload your business license, trade tickets, insurance, and industry accreditations. IAM ops verifies each document against the issuing body, confirms physical presence, and the EyeSpyR badge activates on your listing." },
             { "@type": "HowToStep", position: 4, name: "Monitor & Grow", text: "24/7 scan cycle runs on your listings, reviews, and website. Anomalies alert you within 5 minutes. You keep the badge by holding a 4.5+." },
           ],
         }),
