@@ -26,6 +26,22 @@ export interface AuditEvent {
   status: IntegrityStatus;
 }
 
+export interface ScoreFactor {
+  id: string;
+  label: string;
+  kind: "credential" | "positive_receipt" | "negative_receipt" | "penalty";
+  status: IntegrityStatus;
+  weightPct: number; // signed contribution to overall score, e.g. +12.5 or -15
+  detail?: string;
+  entryId?: string; // deep-link to /entry/{entryId}
+}
+
+export interface ScoreBreakdown {
+  baseline: number; // starting score before factors, e.g. 50
+  total: number; // final score after all factors
+  factors: ScoreFactor[];
+}
+
 export interface EntryDetail {
   id: string;
   type: EntryType;
@@ -39,6 +55,31 @@ export interface EntryDetail {
   reviewText?: string;
   amount?: number;
   invoiceDate?: string;
+  scoreBreakdown?: ScoreBreakdown;
+}
+
+// ------------------------------------------------------------------
+// Allowed status transitions — enforced on the server before emitting
+// timeline updates or status-change emails. Frontend uses the same map
+// to render the timeline and reject impossible states.
+//
+//   received → identity_check → verifying → verified | weighted | flagged
+//   flagged  → resolved
+//   verified | weighted → resolved
+// ------------------------------------------------------------------
+export const ALLOWED_TRANSITIONS: Record<IntegrityStatus, IntegrityStatus[]> = {
+  received: ["identity_check", "verifying", "flagged"],
+  identity_check: ["verifying", "flagged"],
+  verifying: ["verified", "weighted", "flagged"],
+  verified: ["resolved", "flagged"],
+  weighted: ["resolved", "flagged"],
+  flagged: ["resolved"],
+  resolved: [],
+  logged: [],
+};
+
+export function isAllowedTransition(from: IntegrityStatus, to: IntegrityStatus): boolean {
+  return ALLOWED_TRANSITIONS[from]?.includes(to) ?? false;
 }
 
 export interface ReceiptResponse {
