@@ -196,6 +196,11 @@ function VerifyBusiness() {
                 <input type="checkbox" name="exclusive" required className="mt-1 h-4 w-4 accent-[color:var(--acid)]" />
                 <span>I understand IAM territories are one-per-100K population, one trade per operator, and are awarded on a first-verified basis.</span>
               </label>
+              <label className="flex cursor-pointer items-start gap-3 text-sm text-muted-foreground">
+                <input type="checkbox" name="notify" defaultChecked className="mt-1 h-4 w-4 accent-[color:var(--acid)]" />
+                <span>Email me at every status change — <span className="text-foreground/80">received → identity check → verifying → verified/flagged → resolved</span>.</span>
+              </label>
+
             </fieldset>
 
             {state.kind === "error" && <p className="mono-label text-[color:var(--acid)]">{state.message}</p>}
