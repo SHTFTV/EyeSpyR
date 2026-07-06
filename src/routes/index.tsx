@@ -4,7 +4,7 @@ import { PageHero } from "@/components/PageHero";
 import { ScanBar } from "@/components/ScanBar";
 import { EyeMark } from "@/components/EyeMark";
 import ogHome from "@/assets/og-home.jpg";
-import heroImg from "@/assets/hero-eyespyr.jpg";
+import heroAsset from "@/assets/eyespyr-hero-banner.png.asset.json";
 import { IAM_TARGET_URL, trackEvent } from "@/lib/analytics";
 
 const SITE_URL = "https://eyespyr.com";
@@ -76,8 +76,10 @@ function Index() {
         title="THE TRUST"
         accent="STANDARD"
         lead="The verification and quality-control engine behind every IAM contractor. Real-time monitoring. Un-riggable scores. Territory-exclusive."
-        backgroundImage={heroImg}
+        backgroundImage={heroAsset.url}
         backgroundImageAlt="EyeSpyR — the trust standard verification platform hero banner"
+        backgroundFit="contain"
+        backgroundDim="light"
         heroLink={IAM_TARGET_URL}
         heroLinkLabel="Visit Industry Army Marketing"
         onHeroLinkClick={() =>

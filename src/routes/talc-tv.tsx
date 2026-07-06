@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
-import heroImg from "@/assets/hero-eyespyr.jpg";
+import heroAsset from "@/assets/eyespyr-hero-banner.png.asset.json";
 import ogImg from "@/assets/og-eyespyr.jpg";
 import {
   IAM_TARGET_URL,
@@ -202,8 +202,10 @@ function TalcTvPage() {
         title="TALC.TV"
         accent="BLAST"
         lead="Verified trade wins pushed to every feed the moment your score moves. Five social channels, three quarterly guest-post placements, every link dofollow to your public ledger."
-        backgroundImage={heroImg}
+        backgroundImage={heroAsset.url}
         backgroundImageAlt="TALC.tv verified trade blast hero banner"
+        backgroundFit="contain"
+        backgroundDim="light"
         heroLink={IAM_TARGET_URL}
         heroLinkLabel="Visit Industry Army Marketing"
         onHeroLinkClick={() =>

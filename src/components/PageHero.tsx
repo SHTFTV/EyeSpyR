@@ -8,6 +8,8 @@ export function PageHero({
   children,
   backgroundImage,
   backgroundImageAlt = "EyeSpyR verification platform hero banner",
+  backgroundFit = "cover",
+  backgroundDim = "heavy",
   heroLink,
   heroLinkLabel,
   onHeroLinkClick,
@@ -19,18 +21,31 @@ export function PageHero({
   children?: ReactNode;
   backgroundImage?: string;
   backgroundImageAlt?: string;
+  backgroundFit?: "cover" | "contain";
+  backgroundDim?: "heavy" | "light";
   heroLink?: string;
   heroLinkLabel?: string;
   onHeroLinkClick?: () => void;
 }) {
+  const imgClass =
+    backgroundFit === "contain"
+      ? "pointer-events-none absolute inset-0 h-full w-full object-contain opacity-95"
+      : "pointer-events-none absolute inset-0 h-full w-full object-cover opacity-60";
+
+  const overlayBg =
+    backgroundDim === "light"
+      ? "linear-gradient(180deg, rgba(10,12,16,0.05) 0%, rgba(10,12,16,0.25) 60%, rgba(10,12,16,0.7) 100%)"
+      : "linear-gradient(180deg, rgba(10,12,16,0.35) 0%, rgba(10,12,16,0.75) 55%, rgba(10,12,16,0.95) 100%)";
+
   const ImageEl = backgroundImage ? (
     <img
       src={backgroundImage}
       alt={backgroundImageAlt}
-      className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-60"
+      className={imgClass}
       loading="eager"
     />
   ) : null;
+
 
   return (
     <section className="relative overflow-hidden border-b border-border/60 px-5 py-20 sm:px-8 sm:py-28">
@@ -53,10 +68,7 @@ export function PageHero({
           )}
           <div
             className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(10,12,16,0.35) 0%, rgba(10,12,16,0.75) 55%, rgba(10,12,16,0.95) 100%)",
-            }}
+            style={{ background: overlayBg }}
           />
         </>
       )}
