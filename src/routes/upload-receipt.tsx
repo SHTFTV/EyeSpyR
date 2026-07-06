@@ -36,7 +36,7 @@ export const Route = createFileRoute("/upload-receipt")({
 type State =
   | { kind: "idle" }
   | { kind: "submitting" }
-  | { kind: "queued"; ref: string; message: string }
+  | { kind: "queued"; ref: string; message: string; demo: boolean }
   | { kind: "error"; message: string };
 
 function UploadReceipt() {
@@ -47,27 +47,33 @@ function UploadReceipt() {
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setState({ kind: "submitting" });
-    const form = new FormData(e.currentTarget);
-    form.set("rating", String(rating));
 
-    try {
-      const res = await fetch(`${API_BASE}/receipts`, { method: "POST", body: form });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = (await res.json().catch(() => ({}))) as { reference?: string };
-      setState({
-        kind: "queued",
-        ref: data.reference ?? demoRef(),
-        message: "Uploaded. Verification pending — you'll get an email when it's weighted.",
-      });
-    } catch {
-      // Graceful demo fallback — matches the scan flow's behavior.
-      setState({
-        kind: "queued",
-        ref: demoRef(),
-        message: "Uploaded to the queue in demo mode. Live verification runs when the API is reachable.",
-      });
-    }
+    // Build payload matching the backend spec exactly.
+    const raw = new FormData(e.currentTarget);
+    const payload = new FormData();
+    payload.set("operatorName", String(raw.get("operator") ?? ""));
+    payload.set("invoiceNumber", String(raw.get("invoice") ?? ""));
+    payload.set("invoiceDate", String(raw.get("serviceDate") ?? ""));
+    payload.set("amount", String(raw.get("amount") ?? ""));
+    payload.set("starRating", String(rating));
+    payload.set("reviewText", String(raw.get("review") ?? ""));
+    payload.set("consumerEmail", String(raw.get("email") ?? ""));
+    payload.set("pipedaConsent", raw.get("consent") ? "true" : "false");
+    payload.set("notifyOnStatusChange", raw.get("notify") ? "true" : "false");
+    const file = raw.get("receipt");
+    if (file instanceof File) payload.set("receiptFile", file, file.name);
+
+    const result = await submitReceipt(payload);
+    setState({
+      kind: "queued",
+      ref: result.referenceId,
+      demo: !!result.demo,
+      message: result.demo
+        ? "Queued in demo mode. Once the API is reachable, verification runs and you'll get an email at every status change."
+        : "Received. You'll get an email at each status change — checking → weighted or flagged → resolved.",
+    });
   }
+
 
   return (
     <SiteLayout>
