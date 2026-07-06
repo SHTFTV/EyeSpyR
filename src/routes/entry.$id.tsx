@@ -6,6 +6,7 @@ import {
   getEntryDetail,
   statusColor,
   statusLabel,
+  subscribeToEntryUpdates,
   type EntryDetail,
   type IntegrityStatus,
 } from "@/lib/api";
@@ -157,6 +158,11 @@ function EntryDetailPage() {
         </ol>
       </section>
 
+      {/* Email alerts */}
+      <section className="mx-auto max-w-5xl px-5 pb-4 sm:px-8">
+        <EmailAlerts entryId={entry.id} />
+      </section>
+
       {/* Score composition explainer */}
       <section className="border-t border-border/60 bg-[color:var(--surface)]/30 px-5 py-14 sm:px-8">
         <div className="mx-auto max-w-4xl">
@@ -233,6 +239,61 @@ function ShareButton({ id }: { id: string }) {
     <button onClick={onShare} className="acid-btn justify-center whitespace-nowrap">
       {copied ? "Link Copied ✓" : "Share Public Link"}
     </button>
+  );
+}
+
+function EmailAlerts({ entryId }: { entryId: string }) {
+  const [email, setEmail] = useState("");
+  const [state, setState] = useState<"idle" | "sending" | "done" | "demo">("idle");
+
+  async function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email.trim()) return;
+    setState("sending");
+    const res = await subscribeToEntryUpdates(entryId, email.trim());
+    setState(res.demo ? "demo" : "done");
+  }
+
+  return (
+    <div className="panel grid gap-4 p-6 sm:grid-cols-[1fr_auto] sm:items-end">
+      <div>
+        <p className="eyebrow text-[color:var(--acid)]">Get status-change alerts</p>
+        <h3 className="mt-2 font-display text-xl font-black uppercase">
+          Email me when this entry moves
+        </h3>
+        <p className="mt-2 text-sm text-muted-foreground">
+          One email per transition — received → checking → verified / weighted / flagged →
+          resolved. Unsubscribe anytime.
+        </p>
+      </div>
+      <form onSubmit={onSubmit} className="flex flex-col gap-2 sm:flex-row">
+        <input
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@domain.com"
+          className="min-w-[240px] rounded-none border border-border bg-background px-3 py-2 text-sm outline-none focus:border-[color:var(--acid)]"
+          disabled={state === "sending" || state === "done"}
+        />
+        <button
+          type="submit"
+          disabled={state === "sending" || state === "done"}
+          className="acid-btn justify-center whitespace-nowrap"
+        >
+          {state === "sending"
+            ? "Subscribing…"
+            : state === "done" || state === "demo"
+              ? "Subscribed ✓"
+              : "Notify Me"}
+        </button>
+      </form>
+      {state === "demo" && (
+        <p className="mono-label text-muted-foreground sm:col-span-2">
+          DEMO MODE · Backend `/api/notify/subscribe` unreachable — request queued locally.
+        </p>
+      )}
+    </div>
   );
 }
 

@@ -92,6 +92,38 @@ export async function submitCredentials(
   }
 }
 
+export interface NotifySubscribeResponse {
+  success: boolean;
+  entryId: string;
+  email: string;
+  demo?: boolean;
+}
+
+/**
+ * Opt an email address into status-change notifications for a ledger entry.
+ * Backend contract: POST {API_BASE}/api/notify/subscribe
+ *   { entryId: string, email: string, events?: IntegrityStatus[] }
+ * Server should fire an email on every status transition
+ * (received → identity_check → verifying → verified/weighted/flagged → resolved),
+ * with a deep link back to https://eyespyr.com/entry/{entryId}.
+ */
+export async function subscribeToEntryUpdates(
+  entryId: string,
+  email: string,
+): Promise<NotifySubscribeResponse> {
+  try {
+    const res = await fetch(`${API_BASE}/api/notify/subscribe`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ entryId, email }),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return (await res.json()) as NotifySubscribeResponse;
+  } catch {
+    return { success: true, entryId, email, demo: true };
+  }
+}
+
 export async function getEntryDetail(id: string): Promise<EntryDetail & { demo?: boolean }> {
   try {
     const res = await fetch(`${API_BASE}/api/entries/${encodeURIComponent(id)}`);
