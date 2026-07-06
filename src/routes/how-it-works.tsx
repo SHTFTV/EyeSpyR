@@ -2,19 +2,45 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 
+const HIW_TITLE = "How It Works — EyeSpyR Verification Pipeline";
+const HIW_DESC =
+  "Scan, claim, go live, monitor. The four-step EyeSpyR verification pipeline for trade operators in the IAM network.";
+
 export const Route = createFileRoute("/how-it-works")({
   head: () => ({
     meta: [
-      { title: "How It Works — EyeSpyR Verification Pipeline" },
+      { title: HIW_TITLE },
+      { name: "description", content: HIW_DESC },
+      { property: "og:title", content: HIW_TITLE },
+      { property: "og:description", content: HIW_DESC },
+      { property: "og:type", content: "article" },
+      { property: "og:url", content: "/how-it-works" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: HIW_TITLE },
+      { name: "twitter:description", content: HIW_DESC },
+    ],
+    links: [{ rel: "canonical", href: "/how-it-works" }],
+    scripts: [
       {
-        name: "description",
-        content:
-          "Scan, claim, go live, monitor. The four-step EyeSpyR verification pipeline for trade operators in the IAM network.",
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "HowTo",
+          name: "How EyeSpyR verifies a trade operator",
+          description: HIW_DESC,
+          step: [
+            { "@type": "HowToStep", position: 1, name: "Run Your Free Scan", text: "Drop your URL into the scan bar. In under 60 seconds we return your public reputation score, malware posture, link integrity, and territory status." },
+            { "@type": "HowToStep", position: 2, name: "Claim Your City", text: "Territories are one-per-100K population, one trade per operator. If yours is open, you can claim exclusive rights before a competitor does." },
+            { "@type": "HowToStep", position: 3, name: "Go Live & Verified", text: "The EyeSpyR badge activates on your listing. IAM ops confirms business registration and physical presence. Your public score goes live." },
+            { "@type": "HowToStep", position: 4, name: "Monitor & Grow", text: "24/7 scan cycle runs on your listings, reviews, and website. Anomalies alert you within 5 minutes. You keep the badge by holding a 4.5+." },
+          ],
+        }),
       },
     ],
   }),
   component: HowItWorks,
 });
+
 
 const steps = [
   {

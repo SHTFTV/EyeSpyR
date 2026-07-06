@@ -3,19 +3,28 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import { ScanBar } from "@/components/ScanBar";
 
+const SCAN_TITLE = "Free EyeSpyR Scan — Check Your Business Reputation";
+const SCAN_DESC =
+  "Run a free EyeSpyR scan. Get your reputation score, security posture, and territory status in under 60 seconds.";
+
 export const Route = createFileRoute("/scan")({
   head: () => ({
     meta: [
-      { title: "Free EyeSpyR Scan — Check Your Business Reputation" },
-      {
-        name: "description",
-        content:
-          "Run a free EyeSpyR scan. Get your reputation score, security posture, and territory status in under 60 seconds.",
-      },
+      { title: SCAN_TITLE },
+      { name: "description", content: SCAN_DESC },
+      { property: "og:title", content: SCAN_TITLE },
+      { property: "og:description", content: SCAN_DESC },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "/scan" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: SCAN_TITLE },
+      { name: "twitter:description", content: SCAN_DESC },
     ],
+    links: [{ rel: "canonical", href: "/scan" }],
   }),
   component: ScanPage,
 });
+
 
 function ScanPage() {
   return (

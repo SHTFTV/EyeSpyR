@@ -2,19 +2,28 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 
+const NET_TITLE = "The IAM Network — EyeSpyR Verified Territories";
+const NET_DESC =
+  "IAM operates a one-per-territory network of verified trade operators across the Lower Mainland. See coverage, trades, and open cities.";
+
 export const Route = createFileRoute("/network")({
   head: () => ({
     meta: [
-      { title: "The IAM Network — EyeSpyR Verified Territories" },
-      {
-        name: "description",
-        content:
-          "IAM operates a one-per-territory network of verified trade operators across the Lower Mainland. See coverage, trades, and open cities.",
-      },
+      { title: NET_TITLE },
+      { name: "description", content: NET_DESC },
+      { property: "og:title", content: NET_TITLE },
+      { property: "og:description", content: NET_DESC },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "/network" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: NET_TITLE },
+      { name: "twitter:description", content: NET_DESC },
     ],
+    links: [{ rel: "canonical", href: "/network" }],
   }),
   component: Network,
 });
+
 
 const territories = [
   { city: "Vancouver", trade: "Plumbing", status: "Claimed" },

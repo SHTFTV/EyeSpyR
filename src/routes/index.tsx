@@ -4,19 +4,27 @@ import { PageHero } from "@/components/PageHero";
 import { ScanBar } from "@/components/ScanBar";
 import { EyeMark } from "@/components/EyeMark";
 
+const HOME_DESC =
+  "Un-riggable verification scores for the IAM trade network. Real-time monitoring, tamper-proof, PIPEDA compliant.";
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "EyeSpyR — The Trust Standard" },
-      {
-        name: "description",
-        content:
-          "Un-riggable verification scores for the IAM trade network. Real-time monitoring, tamper-proof, PIPEDA compliant.",
-      },
+      { name: "description", content: HOME_DESC },
+      { property: "og:title", content: "EyeSpyR — The Trust Standard" },
+      { property: "og:description", content: HOME_DESC },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "/" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "EyeSpyR — The Trust Standard" },
+      { name: "twitter:description", content: HOME_DESC },
     ],
+    links: [{ rel: "canonical", href: "/" }],
   }),
   component: Index,
 });
+
 
 const pillars = [
   {

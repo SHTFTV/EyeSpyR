@@ -3,19 +3,28 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import { EyeMark, Wordmark } from "@/components/EyeMark";
 
+const BADGE_TITLE = "The EyeSpyR Badge — What Verification Means";
+const BADGE_DESC =
+  "The EyeSpyR badge is issued only after validated business registration, verified location, and territory exclusivity. Here's what it takes.";
+
 export const Route = createFileRoute("/eyespyr")({
   head: () => ({
     meta: [
-      { title: "The EyeSpyR Badge — What Verification Means" },
-      {
-        name: "description",
-        content:
-          "The EyeSpyR badge is issued only after validated business registration, verified location, and territory exclusivity. Here’s what it takes.",
-      },
+      { title: BADGE_TITLE },
+      { name: "description", content: BADGE_DESC },
+      { property: "og:title", content: BADGE_TITLE },
+      { property: "og:description", content: BADGE_DESC },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "/eyespyr" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: BADGE_TITLE },
+      { name: "twitter:description", content: BADGE_DESC },
     ],
+    links: [{ rel: "canonical", href: "/eyespyr" }],
   }),
   component: BadgePage,
 });
+
 
 const requirements = [
   {

@@ -3,19 +3,42 @@ import { useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 
+const PRICING_TITLE = "Pricing — EyeSpyR Verified Badge & Pro Monitoring";
+const PRICING_DESC =
+  "Free EyeSpyR badge for verified IAM operators. Pro monitoring — spyware detection, spam shield, real-time alerts — at $10/month.";
+
 export const Route = createFileRoute("/pricing")({
   head: () => ({
     meta: [
-      { title: "Pricing — EyeSpyR Verified Badge & Pro Monitoring" },
+      { title: PRICING_TITLE },
+      { name: "description", content: PRICING_DESC },
+      { property: "og:title", content: PRICING_TITLE },
+      { property: "og:description", content: PRICING_DESC },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "/pricing" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: PRICING_TITLE },
+      { name: "twitter:description", content: PRICING_DESC },
+    ],
+    links: [{ rel: "canonical", href: "/pricing" }],
+    scripts: [
       {
-        name: "description",
-        content:
-          "Free EyeSpyR badge for verified IAM operators. Pro monitoring — spyware detection, spam shield, real-time alerts — at $10/month.",
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqs.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }),
       },
     ],
   }),
   component: Pricing,
 });
+
 
 const freeFeatures = [
   ["EyeSpyR verified badge", true],
