@@ -164,11 +164,19 @@ function UploadReceipt() {
             />
 
             <label className="flex cursor-pointer items-start gap-3 text-sm text-muted-foreground">
+              <input type="checkbox" name="notify" defaultChecked className="mt-1 h-4 w-4 accent-[color:var(--acid)]" />
+              <span>
+                Email me at every status change — <span className="text-foreground/80">received → checking → verified/weighted/flagged → resolved</span>.
+              </span>
+            </label>
+
+            <label className="flex cursor-pointer items-start gap-3 text-sm text-muted-foreground">
               <input type="checkbox" name="consent" required className="mt-1 h-4 w-4 accent-[color:var(--acid)]" />
               <span>
                 I confirm the receipt is genuine and I authorize EyeSpyR to verify it against the operator's records. PIPEDA-compliant handling applies.
               </span>
             </label>
+
 
             {state.kind === "error" && <p className="mono-label text-[color:var(--acid)]">{state.message}</p>}
 
