@@ -4,7 +4,7 @@ import { PageHero } from "@/components/PageHero";
 import { ScanBar } from "@/components/ScanBar";
 import ogImg from "@/assets/og-scan.jpg";
 
-const SITE_URL = "";
+const SITE_URL = "https://eyespyr.com";
 const OG_IMAGE = `${SITE_URL}${ogImg}`;
 
 

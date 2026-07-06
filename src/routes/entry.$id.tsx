@@ -14,7 +14,7 @@ import {
 } from "@/lib/api";
 import ogImg from "@/assets/og-home.jpg";
 
-const SITE_URL = "";
+const SITE_URL = "https://eyespyr.com";
 const OG_IMAGE = `${SITE_URL}${ogImg}`;
 
 export const Route = createFileRoute("/entry/$id")({

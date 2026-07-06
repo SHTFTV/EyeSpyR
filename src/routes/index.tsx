@@ -7,7 +7,7 @@ import ogHome from "@/assets/og-home.jpg";
 import heroAsset from "@/assets/eyespyr-hero-banner.png.asset.json";
 import { IAM_TARGET_URL, trackEvent } from "@/lib/analytics";
 
-const SITE_URL = "";
+const SITE_URL = "https://eyespyr.com";
 const OG_IMAGE = `${SITE_URL}${ogHome}`;
 
 
