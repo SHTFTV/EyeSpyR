@@ -13,6 +13,14 @@ const DESC =
   "Full breakdown of how verified credentials and weighted receipts move the EyeSpyR score — including how negative reviews land. No black box.";
 
 export const Route = createFileRoute("/transparency")({
+  loader: async () => {
+    // Pull two live sample entries from the API; fall back to demo data automatically.
+    const [receipt, credential] = await Promise.all([
+      getEntryDetail("REC-99281-XM"),
+      getEntryDetail("BIZ-7731-LH"),
+    ]);
+    return { receipt, credential };
+  },
   head: () => ({
     meta: [
       { title: TITLE },
@@ -31,8 +39,26 @@ export const Route = createFileRoute("/transparency")({
     ],
     links: [{ rel: "canonical", href: `${SITE_URL}/transparency` }],
   }),
+  errorComponent: ({ error }) => (
+    <SiteLayout>
+      <div className="mx-auto max-w-2xl px-5 py-24 text-center">
+        <p className="eyebrow text-[color:var(--acid)]">Ledger unavailable</p>
+        <h1 className="mt-3 font-display text-3xl font-black uppercase">Couldn't load transparency data</h1>
+        <p className="mt-3 text-sm text-muted-foreground">{error.message}</p>
+      </div>
+    </SiteLayout>
+  ),
+  notFoundComponent: () => (
+    <SiteLayout>
+      <div className="mx-auto max-w-2xl px-5 py-24 text-center">
+        <p className="eyebrow text-[color:var(--acid)]">404</p>
+        <h1 className="mt-3 font-display text-3xl font-black uppercase">Nothing here</h1>
+      </div>
+    </SiteLayout>
+  ),
   component: Transparency,
 });
+
 
 const weights = [
   { tag: "40%", label: "Verified Receipts", body: "Reviews backed by an uploaded receipt or invoice that our verification pass confirms against the operator." },
