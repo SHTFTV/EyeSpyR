@@ -68,10 +68,7 @@ export function PageHero({
           )}
           <div
             className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(10,12,16,0.35) 0%, rgba(10,12,16,0.75) 55%, rgba(10,12,16,0.95) 100%)",
-            }}
+            style={{ background: overlayBg }}
           />
         </>
       )}
