@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as VerifyBusinessRouteImport } from './routes/verify-business'
 import { Route as UploadReceiptRouteImport } from './routes/upload-receipt'
 import { Route as TransparencyRouteImport } from './routes/transparency'
+import { Route as TalcTvRouteImport } from './routes/talc-tv'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ScanRouteImport } from './routes/scan'
 import { Route as PricingRouteImport } from './routes/pricing'
@@ -34,6 +35,11 @@ const UploadReceiptRoute = UploadReceiptRouteImport.update({
 const TransparencyRoute = TransparencyRouteImport.update({
   id: '/transparency',
   path: '/transparency',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TalcTvRoute = TalcTvRouteImport.update({
+  id: '/talc-tv',
+  path: '/talc-tv',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -85,6 +91,7 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRoute
   '/scan': typeof ScanRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/talc-tv': typeof TalcTvRoute
   '/transparency': typeof TransparencyRoute
   '/upload-receipt': typeof UploadReceiptRoute
   '/verify-business': typeof VerifyBusinessRoute
@@ -98,6 +105,7 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/scan': typeof ScanRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/talc-tv': typeof TalcTvRoute
   '/transparency': typeof TransparencyRoute
   '/upload-receipt': typeof UploadReceiptRoute
   '/verify-business': typeof VerifyBusinessRoute
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRoute
   '/scan': typeof ScanRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/talc-tv': typeof TalcTvRoute
   '/transparency': typeof TransparencyRoute
   '/upload-receipt': typeof UploadReceiptRoute
   '/verify-business': typeof VerifyBusinessRoute
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/scan'
     | '/sitemap.xml'
+    | '/talc-tv'
     | '/transparency'
     | '/upload-receipt'
     | '/verify-business'
@@ -140,6 +150,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/scan'
     | '/sitemap.xml'
+    | '/talc-tv'
     | '/transparency'
     | '/upload-receipt'
     | '/verify-business'
@@ -153,6 +164,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/scan'
     | '/sitemap.xml'
+    | '/talc-tv'
     | '/transparency'
     | '/upload-receipt'
     | '/verify-business'
@@ -167,6 +179,7 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   ScanRoute: typeof ScanRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TalcTvRoute: typeof TalcTvRoute
   TransparencyRoute: typeof TransparencyRoute
   UploadReceiptRoute: typeof UploadReceiptRoute
   VerifyBusinessRoute: typeof VerifyBusinessRoute
@@ -194,6 +207,13 @@ declare module '@tanstack/react-router' {
       path: '/transparency'
       fullPath: '/transparency'
       preLoaderRoute: typeof TransparencyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/talc-tv': {
+      id: '/talc-tv'
+      path: '/talc-tv'
+      fullPath: '/talc-tv'
+      preLoaderRoute: typeof TalcTvRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -263,6 +283,7 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   ScanRoute: ScanRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TalcTvRoute: TalcTvRoute,
   TransparencyRoute: TransparencyRoute,
   UploadReceiptRoute: UploadReceiptRoute,
   VerifyBusinessRoute: VerifyBusinessRoute,
