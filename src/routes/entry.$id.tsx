@@ -7,8 +7,10 @@ import {
   statusColor,
   statusLabel,
   subscribeToEntryUpdates,
+  unsubscribeFromEntryUpdates,
   type EntryDetail,
   type IntegrityStatus,
+  type ScoreFactor,
 } from "@/lib/api";
 import ogImg from "@/assets/og-home.jpg";
 
