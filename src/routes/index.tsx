@@ -4,7 +4,7 @@ import { PageHero } from "@/components/PageHero";
 import { ScanBar } from "@/components/ScanBar";
 import { EyeMark } from "@/components/EyeMark";
 import ogHome from "@/assets/og-home.jpg";
-import heroImg from "@/assets/hero-eyespyr.jpg";
+import heroAsset from "@/assets/eyespyr-hero-banner.png.asset.json";
 import { IAM_TARGET_URL, trackEvent } from "@/lib/analytics";
 
 const SITE_URL = "https://eyespyr.com";
