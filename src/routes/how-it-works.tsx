@@ -1,6 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
+import ogImg from "@/assets/og-how-it-works.jpg";
+
+const SITE_URL = "https://eyespyr.com";
+const OG_IMAGE = `${SITE_URL}${ogImg}`;
+
 
 const HIW_TITLE = "How It Works — EyeSpyR Verification Pipeline";
 const HIW_DESC =
@@ -14,12 +19,17 @@ export const Route = createFileRoute("/how-it-works")({
       { property: "og:title", content: HIW_TITLE },
       { property: "og:description", content: HIW_DESC },
       { property: "og:type", content: "article" },
-      { property: "og:url", content: "/how-it-works" },
+      { property: "og:url", content: `${SITE_URL}/how-it-works` },
+      { property: "og:image", content: OG_IMAGE },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: HIW_TITLE },
       { name: "twitter:description", content: HIW_DESC },
+      { name: "twitter:image", content: OG_IMAGE },
     ],
-    links: [{ rel: "canonical", href: "/how-it-works" }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/how-it-works` }],
+
     scripts: [
       {
         type: "application/ld+json",

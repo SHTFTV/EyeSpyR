@@ -2,6 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
+import ogImg from "@/assets/og-pricing.jpg";
+
+const SITE_URL = "https://eyespyr.com";
+const OG_IMAGE = `${SITE_URL}${ogImg}`;
+
 
 const PRICING_TITLE = "Pricing — EyeSpyR Verified Badge & Pro Monitoring";
 const PRICING_DESC =
@@ -15,12 +20,17 @@ export const Route = createFileRoute("/pricing")({
       { property: "og:title", content: PRICING_TITLE },
       { property: "og:description", content: PRICING_DESC },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "/pricing" },
+      { property: "og:url", content: `${SITE_URL}/pricing` },
+      { property: "og:image", content: OG_IMAGE },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: PRICING_TITLE },
       { name: "twitter:description", content: PRICING_DESC },
+      { name: "twitter:image", content: OG_IMAGE },
     ],
-    links: [{ rel: "canonical", href: "/pricing" }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/pricing` }],
+
     scripts: [
       {
         type: "application/ld+json",
