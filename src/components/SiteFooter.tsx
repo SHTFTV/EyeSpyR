@@ -15,14 +15,17 @@ export function SiteFooter() {
         </div>
         <FooterCol title="Platform" items={[
           { to: "/how-it-works", label: "How It Works" },
+          { to: "/transparency", label: "Scoring Transparency" },
           { to: "/eyespyr", label: "The Badge" },
           { to: "/scan", label: "Free Scan" },
         ]}/>
-        <FooterCol title="Network" items={[
-          { to: "/network", label: "Coverage" },
+        <FooterCol title="Verify" items={[
+          { to: "/verify-business", label: "For Businesses" },
+          { to: "/upload-receipt", label: "For Consumers" },
+          { to: "/network", label: "Coverage Map" },
           { to: "/pricing", label: "Pricing" },
-          { href: "https://industryarmymarketing.com", label: "IAM Network", external: true },
         ]}/>
+
         <FooterCol title="Legal" items={[
           { href: "mailto:legal@industryarmymarketing.com", label: "Contact Legal" },
           { href: "/IAM-Privacy-Policy.pdf", label: "Privacy" },
