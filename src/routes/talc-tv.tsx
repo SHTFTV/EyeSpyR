@@ -10,7 +10,7 @@ import {
   type BlastChannel,
 } from "@/lib/analytics";
 
-const SITE_URL = "https://eyespyr.com";
+const SITE_URL = "";
 const CANONICAL = `${SITE_URL}/talc-tv`;
 const OG_IMAGE = `${SITE_URL}${ogImg}`;
 const DEMO_ENTRY_PATH = "/entry/demo";

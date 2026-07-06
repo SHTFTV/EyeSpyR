@@ -5,7 +5,7 @@ import { getEntryDetail, statusColor, statusLabel, type EntryDetail } from "@/li
 import ogImg from "@/assets/og-home.jpg";
 
 
-const SITE_URL = "https://eyespyr.com";
+const SITE_URL = "";
 const OG_IMAGE = `${SITE_URL}${ogImg}`;
 
 const TITLE = "Scoring Transparency — How the EyeSpyR Score Works";
