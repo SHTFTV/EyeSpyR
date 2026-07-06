@@ -288,17 +288,3 @@ export function demoEntry(id: string): EntryDetail {
       ],
     },
   };
-}
-    starRating: 5,
-    amount: 2340,
-    invoiceDate: "2026-06-04",
-    reviewText:
-      "Emergency call at 9pm, on-site in 40 minutes, sourced a rare cartridge, walked me through the whole repair. Fair invoice for after-hours.",
-    auditTrail: [
-      { timestamp: "2026-07-06T10:45:00Z", event: "Receipt logged via consumer flow", status: "received" },
-      { timestamp: "2026-07-06T10:51:00Z", event: "OCR extraction complete — invoice #4471, $2,340.00", status: "verifying" },
-      { timestamp: "2026-07-06T11:02:00Z", event: "OCR line-item match completed against operator ledger", status: "weighted" },
-      { timestamp: "2026-07-06T11:04:00Z", event: "Weight applied — verified receipt (3× anonymous baseline)", status: "weighted" },
-    ],
-  };
-}
