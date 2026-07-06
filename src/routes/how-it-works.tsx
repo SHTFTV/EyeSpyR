@@ -1,0 +1,90 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { SiteLayout } from "@/components/SiteLayout";
+import { PageHero } from "@/components/PageHero";
+
+export const Route = createFileRoute("/how-it-works")({
+  head: () => ({
+    meta: [
+      { title: "How It Works — EyeSpyR Verification Pipeline" },
+      {
+        name: "description",
+        content:
+          "Scan, claim, go live, monitor. The four-step EyeSpyR verification pipeline for trade operators in the IAM network.",
+      },
+    ],
+  }),
+  component: HowItWorks,
+});
+
+const steps = [
+  {
+    n: "01",
+    title: "Run Your Free Scan",
+    body: "Drop your URL into the scan bar. In under 60 seconds we return your public reputation score, malware posture, link integrity, and territory status.",
+  },
+  {
+    n: "02",
+    title: "Claim Your City",
+    body: "Territories are one-per-100K population, one trade per operator. If yours is open, you can claim exclusive rights before a competitor does.",
+  },
+  {
+    n: "03",
+    title: "Go Live & Verified",
+    body: "The EyeSpyR badge activates on your listing. IAM ops confirms business registration and physical presence. Your public score goes live.",
+  },
+  {
+    n: "04",
+    title: "Monitor & Grow",
+    body: "24/7 scan cycle runs on your listings, reviews, and website. Anomalies alert you within 5 minutes. You keep the badge by holding a 4.5+.",
+  },
+];
+
+function HowItWorks() {
+  return (
+    <SiteLayout>
+      <PageHero
+        eyebrow="The Pipeline"
+        title="FROM SCAN"
+        accent="TO VERIFIED"
+        lead="Four steps. No sales call required. Most operators go live inside a business day."
+      />
+
+      <section className="mx-auto max-w-5xl px-5 py-20 sm:px-8">
+        <ol className="space-y-4">
+          {steps.map((s, i) => (
+            <li
+              key={s.n}
+              className="panel grid gap-6 p-8 sm:grid-cols-[auto_1fr] sm:items-center"
+            >
+              <div className="flex items-center gap-4 sm:flex-col sm:items-start">
+                <span className="font-display text-6xl font-black text-[color:var(--acid)]">
+                  {s.n}
+                </span>
+                <span className="mono-label">
+                  Step {i + 1} · of {steps.length}
+                </span>
+              </div>
+              <div>
+                <h3 className="font-display text-2xl font-bold uppercase sm:text-3xl">
+                  {s.title}
+                </h3>
+                <p className="mt-3 text-muted-foreground">{s.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <div className="mt-16 border border-[color:var(--acid)]/50 bg-[color:var(--acid)]/5 p-8 text-center">
+          <p className="eyebrow">Ready?</p>
+          <h2 className="mt-3 font-display text-3xl font-black uppercase">
+            Start with the <span className="text-[color:var(--acid)]">Free Scan</span>
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">
+            No credit card, no onboarding call. You’ll see your score and territory availability immediately.
+          </p>
+          <Link to="/scan" className="acid-btn mt-6">Run Free Scan</Link>
+        </div>
+      </section>
+    </SiteLayout>
+  );
+}
