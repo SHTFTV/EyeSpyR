@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
-import { PageHero } from "@/components/PageHero";
 import { HeroBanner } from "@/components/HeroBanner";
 import { ScanBar } from "@/components/ScanBar";
 import { EyeMark } from "@/components/EyeMark";
