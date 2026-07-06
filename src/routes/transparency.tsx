@@ -139,29 +139,27 @@ function Transparency() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Verification Timeline · Example Operator</p>
+      {/* Live timeline (real API with fallback) */}
+      <section className="mx-auto max-w-5xl px-5 py-16 sm:px-8">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="eyebrow">
+              Live Verification Timeline
+              {isDemo && <span className="ml-2 text-muted-foreground">· DEMO MODE</span>}
+            </p>
             <h2 className="mt-2 font-display text-3xl font-black uppercase sm:text-4xl">
               Every event, <span className="text-[color:var(--acid)]">on the record</span>
             </h2>
           </div>
           <p className="max-w-sm text-sm text-muted-foreground">
-            Every operator profile carries a public timeline like this. Verified, weighted, flagged, resolved, disputed — all of it, in order.
+            Pulled live from the ledger API — two sample entries: one verified operator credential and one weighted consumer receipt.
           </p>
         </div>
 
-        <ol className="mt-10 space-y-3">
-          {timeline.map((e, i) => (
-            <li key={i} className="panel grid gap-4 p-5 sm:grid-cols-[190px_120px_1fr]">
-              <p className="mono-label text-muted-foreground">{e.when}</p>
-              <div className="flex items-center gap-2">
-                <StatusDot status={e.status} />
-                <span className="mono-label" style={{ color: statusColor(e.status) }}>
-                  {e.tag} · {e.status.toUpperCase()}
-                </span>
-              </div>
-              <p className="text-sm text-foreground/90">{e.body}</p>
-            </li>
-          ))}
-        </ol>
+        <div className="mt-10 grid gap-8 lg:grid-cols-2">
+          <EntryPreview entry={credential} label="Operator Credential" />
+          <EntryPreview entry={receipt} label="Consumer Receipt" />
+        </div>
       </section>
 
       {/* CTA */}
@@ -184,18 +182,55 @@ function Transparency() {
   );
 }
 
-function statusColor(status: string): string {
-  if (status === "verified" || status === "weighted" || status === "resolved") return "var(--acid)";
-  if (status === "flagged") return "#ff8a3d";
-  return "color-mix(in oklab, white 60%, transparent)";
-}
-
-function StatusDot({ status }: { status: string }) {
+function EntryPreview({ entry, label }: { entry: EntryDetail; label: string }) {
+  const positive = entry.scoreWeightEffect.trim().startsWith("+");
   return (
-    <span
-      aria-hidden
-      className="inline-block h-2 w-2"
-      style={{ background: statusColor(status), boxShadow: `0 0 8px ${statusColor(status)}` }}
-    />
+    <div className="panel p-6">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="mono-label text-muted-foreground">{label}</p>
+          <p className="mt-1 font-display text-lg font-black uppercase">{entry.id}</p>
+        </div>
+        <p
+          className="font-display text-2xl font-black"
+          style={{ color: positive ? "var(--acid)" : "#ff5a3d" }}
+        >
+          {entry.scoreWeightEffect}
+        </p>
+      </div>
+
+      <ol className="mt-5 space-y-2">
+        {entry.auditTrail.slice(0, 4).map((e, i) => {
+          const color = statusColor(e.status);
+          return (
+            <li key={i} className="grid gap-2 border-l-2 pl-3" style={{ borderColor: color }}>
+              <div className="flex items-center gap-2">
+                <span
+                  aria-hidden
+                  className="inline-block h-2 w-2"
+                  style={{ background: color, boxShadow: `0 0 8px ${color}` }}
+                />
+                <span className="mono-label" style={{ color }}>
+                  {statusLabel(e.status)}
+                </span>
+                <span className="mono-label text-muted-foreground">
+                  {new Date(e.timestamp).toISOString().slice(0, 16).replace("T", " ")}
+                </span>
+              </div>
+              <p className="text-xs leading-relaxed text-foreground/90">{e.event}</p>
+            </li>
+          );
+        })}
+      </ol>
+
+      <Link
+        to="/entry/$id"
+        params={{ id: entry.id }}
+        className="ghost-btn mt-5 inline-flex text-xs"
+      >
+        View Full Audit Trail →
+      </Link>
+    </div>
   );
 }
+
