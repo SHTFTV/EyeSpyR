@@ -23,12 +23,18 @@ export function HeroBanner({
   children?: ReactNode;
 }) {
   const img = (
-    <img
-      src={image}
-      alt={imageAlt}
-      loading="eager"
-      className="mx-auto block w-full max-w-6xl object-contain"
-    />
+    <div className="relative mx-auto aspect-[21/9] w-full max-w-6xl overflow-hidden">
+      <img
+        src={image}
+        alt={imageAlt}
+        width={1920}
+        height={820}
+        loading="eager"
+        decoding="async"
+        fetchPriority="high"
+        className="absolute inset-0 h-full w-full object-contain"
+      />
+    </div>
   );
 
   return (

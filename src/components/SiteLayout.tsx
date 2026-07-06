@@ -1,7 +1,11 @@
-import type { ReactNode } from "react";
+import { lazy, Suspense, type ReactNode } from "react";
 import { SiteNav } from "./SiteNav";
 import { SiteFooter } from "./SiteFooter";
-import { EyeSpyrWidget } from "./EyeSpyrWidget";
+
+// Lazy: floating widget is non-critical, don't block initial paint
+const EyeSpyrWidget = lazy(() =>
+  import("./EyeSpyrWidget").then((m) => ({ default: m.EyeSpyrWidget })),
+);
 
 export function SiteLayout({ children }: { children: ReactNode }) {
   return (
@@ -9,7 +13,9 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       <SiteNav />
       <main className="flex-1">{children}</main>
       <SiteFooter />
-      <EyeSpyrWidget />
+      <Suspense fallback={null}>
+        <EyeSpyrWidget />
+      </Suspense>
     </div>
   );
 }
