@@ -9,8 +9,38 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ScanRouteImport } from './routes/scan'
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as NetworkRouteImport } from './routes/network'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as EyespyrRouteImport } from './routes/eyespyr'
 import { Route as IndexRouteImport } from './routes/index'
 
+const ScanRoute = ScanRouteImport.update({
+  id: '/scan',
+  path: '/scan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NetworkRoute = NetworkRouteImport.update({
+  id: '/network',
+  path: '/network',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EyespyrRoute = EyespyrRouteImport.update({
+  id: '/eyespyr',
+  path: '/eyespyr',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +49,96 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/eyespyr': typeof EyespyrRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/network': typeof NetworkRoute
+  '/pricing': typeof PricingRoute
+  '/scan': typeof ScanRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/eyespyr': typeof EyespyrRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/network': typeof NetworkRoute
+  '/pricing': typeof PricingRoute
+  '/scan': typeof ScanRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/eyespyr': typeof EyespyrRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/network': typeof NetworkRoute
+  '/pricing': typeof PricingRoute
+  '/scan': typeof ScanRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/eyespyr'
+    | '/how-it-works'
+    | '/network'
+    | '/pricing'
+    | '/scan'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/eyespyr' | '/how-it-works' | '/network' | '/pricing' | '/scan'
+  id:
+    | '__root__'
+    | '/'
+    | '/eyespyr'
+    | '/how-it-works'
+    | '/network'
+    | '/pricing'
+    | '/scan'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  EyespyrRoute: typeof EyespyrRoute
+  HowItWorksRoute: typeof HowItWorksRoute
+  NetworkRoute: typeof NetworkRoute
+  PricingRoute: typeof PricingRoute
+  ScanRoute: typeof ScanRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/scan': {
+      id: '/scan'
+      path: '/scan'
+      fullPath: '/scan'
+      preLoaderRoute: typeof ScanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/network': {
+      id: '/network'
+      path: '/network'
+      fullPath: '/network'
+      preLoaderRoute: typeof NetworkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/eyespyr': {
+      id: '/eyespyr'
+      path: '/eyespyr'
+      fullPath: '/eyespyr'
+      preLoaderRoute: typeof EyespyrRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +151,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  EyespyrRoute: EyespyrRoute,
+  HowItWorksRoute: HowItWorksRoute,
+  NetworkRoute: NetworkRoute,
+  PricingRoute: PricingRoute,
+  ScanRoute: ScanRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,24 +1,188 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { SiteLayout } from "@/components/SiteLayout";
+import { PageHero } from "@/components/PageHero";
+import { ScanBar } from "@/components/ScanBar";
+import { EyeMark } from "@/components/EyeMark";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "EyeSpyR — The Trust Standard" },
+      {
+        name: "description",
+        content:
+          "Un-riggable verification scores for the IAM trade network. Real-time monitoring, tamper-proof, PIPEDA compliant.",
+      },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
+const pillars = [
+  {
+    tag: "Pillar 01",
+    title: "I — Intelligence",
+    body: "Continuous OSINT sweep of every listing, review platform, and business record. Anomalies trigger review before customers see them.",
+  },
+  {
+    tag: "Pillar 02",
+    title: "S — Security",
+    body: "Website integrity, malware scans, link hygiene, DNS posture. If a member site breaks, we know before their next customer clicks.",
+  },
+  {
+    tag: "Pillar 03",
+    title: "P — Provenance",
+    body: "Every review, endorsement and score is chained to a verified source. No purchased reputation, no laundered stars, no gaming the aggregate.",
+  },
+  {
+    tag: "Pillar 04",
+    title: "R — Response",
+    body: "Sub-5-minute alert loop. A negative signal triggers member, IAM ops, and QA in parallel — remediated before it compounds.",
+  },
+];
+
+const slas = [
+  { tier: "P0", time: "5m", desc: "Reputation attack detected" },
+  { tier: "P1", time: "1h", desc: "Score drop investigation" },
+  { tier: "P2", time: "24h", desc: "Content dispute triage" },
+  { tier: "P3", time: "72h", desc: "Territory audit review" },
+];
+
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <SiteLayout>
+      <PageHero
+        eyebrow="EyeSpyR · Verification Platform"
+        title="THE TRUST"
+        accent="STANDARD"
+        lead="The verification and quality-control engine behind every IAM contractor. Real-time monitoring. Un-riggable scores. Territory-exclusive."
+      >
+        <ScanBar />
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <Link to="/scan" className="acid-btn">Get Verified</Link>
+          <Link to="/how-it-works" className="ghost-btn">How It Works</Link>
+        </div>
+      </PageHero>
+
+      {/* Score badge showcase */}
+      <section className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
+        <div className="grid items-center gap-10 md:grid-cols-[auto_1fr]">
+          <div className="panel flex flex-col items-center gap-3 p-8">
+            <EyeMark size={160} score={4.8} className="text-foreground" />
+            <p className="mono-label">Live Trust Signal</p>
+            <p className="font-display text-5xl font-black text-[color:var(--acid)]">4.8<span className="text-xl text-muted-foreground">/5.0</span></p>
+            <p className="mono-label">Network Aggregate · 340 Ops</p>
+          </div>
+          <div>
+            <p className="eyebrow">Why EyeSpyR</p>
+            <h2 className="mt-3 font-display text-4xl font-black uppercase leading-tight sm:text-5xl">
+              A score you can’t <span className="text-[color:var(--acid)]">buy, fake, or clean</span>.
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Generic review sites let bad actors gate, suppress, and pay their way to the top.
+              EyeSpyR runs four parallel data streams on every member — 24/7 — and refuses to
+              hide bad signal. A 4.5+ here means something because it cannot be gamed.
+            </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              {[
+                ["340+", "Verified operators"],
+                ["4.7", "Median score"],
+                ["<5m", "Alert latency"],
+              ].map(([n, l]) => (
+                <div key={l} className="border border-border p-4">
+                  <p className="font-display text-3xl font-black text-[color:var(--acid)]">{n}</p>
+                  <p className="mono-label mt-1">{l}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pillars */}
+      <section className="border-y border-border/60 bg-[color:var(--surface)]/30 px-5 py-20 sm:px-8">
+        <div className="mx-auto max-w-6xl">
+          <p className="eyebrow text-center">The I-S-P-R System</p>
+          <h2 className="mt-3 text-center font-display text-4xl font-black uppercase sm:text-5xl">
+            Four <span className="text-[color:var(--acid)]">Pillars</span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-center text-muted-foreground">
+            Four independent data streams. All live. All auditable. Together they hold the Trust Standard.
+          </p>
+          <div className="mt-12 grid gap-4 sm:grid-cols-2">
+            {pillars.map((p) => (
+              <div key={p.title} className="panel group p-7 transition-colors hover:border-[color:var(--acid)]">
+                <p className="mono-label">{p.tag}</p>
+                <h3 className="mt-2 font-display text-2xl font-bold uppercase text-[color:var(--acid)]">{p.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{p.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SLA */}
+      <section className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="eyebrow">Service Level</p>
+            <h2 className="mt-3 font-display text-4xl font-black uppercase sm:text-5xl">
+              Response <span className="text-[color:var(--acid)]">Windows</span>
+            </h2>
+          </div>
+          <p className="max-w-md text-sm text-muted-foreground">
+            Every event is triaged by severity. No ticket rots. No signal ignored.
+          </p>
+        </div>
+        <div className="mt-8 grid gap-px bg-border sm:grid-cols-4">
+          {slas.map((s) => (
+            <div key={s.tier} className="bg-background p-6 transition-colors hover:bg-[color:var(--surface)]">
+              <p className="mono-label">Priority {s.tier}</p>
+              <p className="mt-3 font-display text-5xl font-black">{s.time}</p>
+              <p className="mt-3 text-xs text-muted-foreground">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Integrity */}
+      <section className="border-y border-border/60 bg-[color:var(--surface)]/30 px-5 py-20 sm:px-8">
+        <div className="mx-auto max-w-6xl">
+          <p className="eyebrow text-center">Integrity</p>
+          <h2 className="mt-3 text-center font-display text-4xl font-black uppercase sm:text-5xl">
+            Un-<span className="text-[color:var(--acid)]">Riggable</span>
+          </h2>
+          <div className="mt-10 grid gap-4 md:grid-cols-3">
+            {[
+              ["No Gating", "Every review — positive or negative — displays. Suppression is disallowed by policy and enforced by architecture."],
+              ["PIPEDA Compliant", "Canadian federal privacy law. Lead data stored BC-side, retained 24 months, then purged."],
+              ["Anti-Fraud", "Badge issued only after validated business registration, verified location, and confirmed exclusive territory."],
+            ].map(([t, b]) => (
+              <div key={t} className="panel p-6">
+                <h3 className="font-display text-xl font-bold uppercase text-[color:var(--acid)]">{t}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{b}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="px-5 py-24 sm:px-8">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="eyebrow">Get Started</p>
+          <h2 className="mt-3 font-display text-5xl font-black uppercase sm:text-6xl">
+            Claim your <span className="text-[color:var(--acid)]">Territory</span>
+          </h2>
+          <p className="mt-4 text-muted-foreground">
+            Run your free EyeSpyR scan. See your score, check territory status, and get verified in under 60 seconds.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link to="/scan" className="acid-btn">Run Free Scan</Link>
+            <Link to="/pricing" className="ghost-btn">See Pricing</Link>
+          </div>
+        </div>
+      </section>
+    </SiteLayout>
   );
 }
