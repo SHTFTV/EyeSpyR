@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
-import { PageHero } from "@/components/PageHero";
+import { HeroBanner } from "@/components/HeroBanner";
 import heroAsset from "@/assets/eyespyr-hero-banner.png.asset.json";
 import ogImg from "@/assets/og-eyespyr.jpg";
 import {
