@@ -45,10 +45,19 @@ type CredFile = { type: string; file: File };
 type State =
   | { kind: "idle" }
   | { kind: "submitting" }
-  | { kind: "queued"; ref: string; message: string; timeline: TimelineEntry[] }
+  | { kind: "queued"; ref: string; message: string; timeline: TimelineEntry[]; demo: boolean }
   | { kind: "error"; message: string };
 
 type TimelineEntry = { label: string; status: "pending" | "verifying" | "verified"; note?: string };
+
+const CRED_FIELD_MAP: Record<string, string> = {
+  business_license: "businessLicense",
+  trade_ticket: "tradeTicket",
+  insurance: "insuranceCertificate",
+  wcb: "wcbProof",
+  accreditation: "accreditation",
+  other: "otherCredential",
+};
 
 function VerifyBusiness() {
   const [state, setState] = useState<State>({ kind: "idle" });
@@ -62,18 +71,41 @@ function VerifyBusiness() {
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setState({ kind: "submitting" });
-    const form = new FormData(e.currentTarget);
-    for (const c of creds) form.append(`credential:${c.type}`, c.file, c.file.name);
 
-    try {
-      const res = await fetch(`${API_BASE}/credentials`, { method: "POST", body: form });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = (await res.json().catch(() => ({}))) as { reference?: string };
-      setState(buildQueuedState(data.reference, creds, "Submitted. Each credential is verified against the issuing body — most complete within one business day."));
-    } catch {
-      setState(buildQueuedState(undefined, creds, "Submitted to the queue in demo mode. Live verification runs when the API is reachable."));
+    // Build payload matching the backend spec exactly.
+    const raw = new FormData(e.currentTarget);
+    const payload = new FormData();
+    payload.set("legalName", String(raw.get("businessName") ?? ""));
+    payload.set("operatingName", String(raw.get("businessName") ?? ""));
+    payload.set("contactEmail", String(raw.get("email") ?? ""));
+    payload.set("registration", String(raw.get("registration") ?? ""));
+    payload.set("trade", String(raw.get("trade") ?? ""));
+    payload.set("territory", String(raw.get("territory") ?? ""));
+    payload.set("website", String(raw.get("website") ?? ""));
+    payload.set("years", String(raw.get("years") ?? ""));
+    payload.set("contactName", String(raw.get("contactName") ?? ""));
+    payload.set("contactRole", String(raw.get("contactRole") ?? ""));
+    payload.set("phone", String(raw.get("phone") ?? ""));
+    payload.set("notes", String(raw.get("notes") ?? ""));
+    payload.set("notifyOnStatusChange", raw.get("notify") ? "true" : "false");
+    for (const c of creds) {
+      const field = CRED_FIELD_MAP[c.type] ?? `credential_${c.type}`;
+      payload.append(field, c.file, c.file.name);
     }
+
+    const result = await submitCredentials(payload);
+    setState(
+      buildQueuedState(
+        result.businessId,
+        creds,
+        result.demo
+          ? "Submitted to the queue in demo mode. Live verification runs when the API is reachable."
+          : "Submitted. Each credential is verified against the issuing body — you'll get an email at every status change.",
+        !!result.demo,
+      ),
+    );
   }
+
 
   return (
     <SiteLayout>
