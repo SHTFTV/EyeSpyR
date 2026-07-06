@@ -213,9 +213,14 @@ function VerifyBusiness() {
   );
 }
 
-function buildQueuedState(ref: string | undefined, creds: CredFile[], message: string): Extract<State, { kind: "queued" }> {
+function buildQueuedState(
+  ref: string | undefined,
+  creds: CredFile[],
+  message: string,
+  demo: boolean,
+): Extract<State, { kind: "queued" }> {
   const timeline: TimelineEntry[] = [
-    { label: "Application received", status: "verified", note: "Entry logged" },
+    { label: "Application received", status: "verified", note: "Entry logged · confirmation email sent" },
     { label: "Identity check · CRA / BC Registry", status: "verifying" },
     ...creds.map((c) => ({
       label: `${prettyCredLabel(c.type)} · ${c.file.name}`,
@@ -230,8 +235,10 @@ function buildQueuedState(ref: string | undefined, creds: CredFile[], message: s
     ref: ref ?? "BIZ-" + Math.random().toString(36).slice(2, 8).toUpperCase(),
     message,
     timeline,
+    demo,
   };
 }
+
 
 function prettyCredLabel(id: string): string {
   const match = CRED_TYPES.find((c) => c.id === id);
