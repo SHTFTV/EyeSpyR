@@ -163,8 +163,55 @@ function Index() {
         </div>
       </section>
 
-      {/* Integrity */}
+      {/* Two-sided verification */}
       <section className="border-y border-border/60 bg-[color:var(--surface)]/30 px-5 py-20 sm:px-8">
+        <div className="mx-auto max-w-6xl">
+          <p className="eyebrow text-center">Two-Sided Verification</p>
+          <h2 className="mt-3 text-center font-display text-4xl font-black uppercase sm:text-5xl">
+            Proof from <span className="text-[color:var(--acid)]">both sides</span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-center text-muted-foreground">
+            This is the best-of-the-best network. Operators prove they belong. Consumers prove the work happened. Everything else is noise.
+          </p>
+
+          <div className="mt-12 grid gap-6 md:grid-cols-2">
+            <div className="panel p-7">
+              <p className="mono-label">For Operators</p>
+              <h3 className="mt-2 font-display text-2xl font-bold uppercase text-[color:var(--acid)]">Credentials, Uploaded</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                Companies upload business licenses, trade qualifications, insurance, WCB clearance, and any other certifications straight into their profile. We verify each document against the issuing body. If it can't be validated, the badge doesn't issue.
+              </p>
+              <ul className="mono-label mt-5 space-y-1.5 text-muted-foreground">
+                <li>· Business license &amp; registration</li>
+                <li>· Trade tickets &amp; Red Seal certificates</li>
+                <li>· Liability insurance &amp; WCB clearance</li>
+                <li>· Manufacturer / industry accreditations</li>
+              </ul>
+            </div>
+
+            <div className="panel p-7">
+              <p className="mono-label">For Consumers</p>
+              <h3 className="mt-2 font-display text-2xl font-bold uppercase text-[color:var(--acid)]">Receipts, Weighted</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                Customers upload a real receipt or invoice with their review. Verified purchases carry more weight in the score — good or bad. Anonymous reviews still show, but they don't move the number the way a proof-of-transaction review does.
+              </p>
+              <ul className="mono-label mt-5 space-y-1.5 text-muted-foreground">
+                <li>· Upload receipt, invoice, or work order</li>
+                <li>· Verified purchases weighted higher</li>
+                <li>· Negative reviews carry the same weight as positive</li>
+                <li>· Consumers protected — businesses can't bury the truth</li>
+              </ul>
+            </div>
+          </div>
+
+          <p className="mono-label mt-10 text-center text-muted-foreground">
+            We monitor the open web for reviews and brand-use signal 24/7. EyeSpyR is the protection layer — for the consumer, and for the operator who earned the badge.
+          </p>
+        </div>
+      </section>
+
+      {/* Integrity */}
+      <section className="px-5 py-20 sm:px-8">
         <div className="mx-auto max-w-6xl">
           <p className="eyebrow text-center">Integrity</p>
           <h2 className="mt-3 text-center font-display text-4xl font-black uppercase sm:text-5xl">
@@ -174,7 +221,7 @@ function Index() {
             {[
               ["No Gating", "Every review — positive or negative — displays. Suppression is disallowed by policy and enforced by architecture."],
               ["PIPEDA Compliant", "Canadian federal privacy law. Lead data stored BC-side, retained 24 months, then purged."],
-              ["Anti-Fraud", "Badge issued only after validated business registration, verified location, and confirmed exclusive territory."],
+              ["Anti-Fraud", "Badge issued only after validated credentials, verified location, confirmed exclusive territory, and a live score."],
             ].map(([t, b]) => (
               <div key={t} className="panel p-6">
                 <h3 className="font-display text-xl font-bold uppercase text-[color:var(--acid)]">{t}</h3>
@@ -184,6 +231,7 @@ function Index() {
           </div>
         </div>
       </section>
+
 
       {/* CTA */}
       <section className="px-5 py-24 sm:px-8">
