@@ -247,6 +247,18 @@ export function demoEntry(id: string): EntryDetail {
         { timestamp: "2026-06-04T15:22:00Z", event: "Liability insurance certificate confirmed with insurer", status: "verified" },
         { timestamp: "2026-06-04T15:30:00Z", event: "Territory locked · Surrey, BC · Plumbing", status: "resolved" },
       ],
+      scoreBreakdown: {
+        baseline: 50,
+        total: 88,
+        factors: [
+          { id: "cred-redseal", label: "Red Seal Plumbing (ITA BC)", kind: "credential", status: "verified", weightPct: +12, detail: "Certificate #RS-88231 confirmed with issuing body." },
+          { id: "cred-wcb", label: "WCB Clearance Letter", kind: "credential", status: "verified", weightPct: +8, detail: "Active, zero outstanding claims." },
+          { id: "cred-liability", label: "$2M Liability Insurance", kind: "credential", status: "verified", weightPct: +8, detail: "Verified directly with insurer." },
+          { id: "rec-4471", label: "Receipt REC-99281-XM · 5★", kind: "positive_receipt", status: "weighted", weightPct: +6, detail: "OCR line-item match against operator ledger.", entryId: "REC-99281-XM" },
+          { id: "rec-3902", label: "Receipt REC-31022-QQ · 2★", kind: "negative_receipt", status: "weighted", weightPct: -4, detail: "Verified negative review — carries equal weight to positive.", entryId: "REC-31022-QQ" },
+          { id: "penalty-response", label: "No public response to negative review", kind: "penalty", status: "flagged", weightPct: -2, detail: "Operator has 30 days to respond publicly before penalty clears." },
+        ],
+      },
     };
   }
   return {
@@ -255,6 +267,28 @@ export function demoEntry(id: string): EntryDetail {
     scoreWeightEffect: "+12.5%",
     integrityStatus: "weighted",
     operator: "Cascade Plumbing Ltd.",
+    starRating: 5,
+    amount: 2340,
+    invoiceDate: "2026-06-04",
+    reviewText:
+      "Emergency call at 9pm, on-site in 40 minutes, sourced a rare cartridge, walked me through the whole repair. Fair invoice for after-hours.",
+    auditTrail: [
+      { timestamp: "2026-07-06T10:45:00Z", event: "Receipt logged via consumer flow", status: "received" },
+      { timestamp: "2026-07-06T10:51:00Z", event: "OCR extraction complete — invoice #4471, $2,340.00", status: "verifying" },
+      { timestamp: "2026-07-06T11:02:00Z", event: "OCR line-item match completed against operator ledger", status: "weighted" },
+      { timestamp: "2026-07-06T11:04:00Z", event: "Weight applied — verified receipt (3× anonymous baseline)", status: "weighted" },
+    ],
+    scoreBreakdown: {
+      baseline: 0,
+      total: 12.5,
+      factors: [
+        { id: "base-star", label: "5★ consumer rating", kind: "positive_receipt", status: "weighted", weightPct: +4, detail: "Base weight for a 5-star anonymous rating." },
+        { id: "ocr-match", label: "OCR line-item match", kind: "positive_receipt", status: "verified", weightPct: +6, detail: "Invoice #4471 matched operator ledger exactly." },
+        { id: "invoice-amount", label: "Invoice amount above median", kind: "positive_receipt", status: "weighted", weightPct: +2.5, detail: "$2,340 vs. category median $890 — real job, not a token receipt." },
+      ],
+    },
+  };
+}
     starRating: 5,
     amount: 2340,
     invoiceDate: "2026-06-04",
