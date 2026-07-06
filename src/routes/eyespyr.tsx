@@ -4,7 +4,7 @@ import { PageHero } from "@/components/PageHero";
 import { EyeMark, Wordmark } from "@/components/EyeMark";
 import ogImg from "@/assets/og-eyespyr.jpg";
 
-const SITE_URL = "";
+const SITE_URL = "https://eyespyr.com";
 const OG_IMAGE = `${SITE_URL}${ogImg}`;
 
 

@@ -20,8 +20,10 @@ import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as NetworkRouteImport } from './routes/network'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as EyespyrRouteImport } from './routes/eyespyr'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EntryIdRouteImport } from './routes/entry.$id'
+import { Route as ApiPublicSeoCheckRouteImport } from './routes/api/public/seo-check'
 
 const VerifyBusinessRoute = VerifyBusinessRouteImport.update({
   id: '/verify-business',
@@ -78,6 +80,11 @@ const EyespyrRoute = EyespyrRouteImport.update({
   path: '/eyespyr',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -88,9 +95,15 @@ const EntryIdRoute = EntryIdRouteImport.update({
   path: '/entry/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicSeoCheckRoute = ApiPublicSeoCheckRouteImport.update({
+  id: '/api/public/seo-check',
+  path: '/api/public/seo-check',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/eyespyr': typeof EyespyrRoute
   '/how-it-works': typeof HowItWorksRoute
   '/network': typeof NetworkRoute
@@ -103,9 +116,11 @@ export interface FileRoutesByFullPath {
   '/upload-receipt': typeof UploadReceiptRoute
   '/verify-business': typeof VerifyBusinessRoute
   '/entry/$id': typeof EntryIdRoute
+  '/api/public/seo-check': typeof ApiPublicSeoCheckRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/eyespyr': typeof EyespyrRoute
   '/how-it-works': typeof HowItWorksRoute
   '/network': typeof NetworkRoute
@@ -118,10 +133,12 @@ export interface FileRoutesByTo {
   '/upload-receipt': typeof UploadReceiptRoute
   '/verify-business': typeof VerifyBusinessRoute
   '/entry/$id': typeof EntryIdRoute
+  '/api/public/seo-check': typeof ApiPublicSeoCheckRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/eyespyr': typeof EyespyrRoute
   '/how-it-works': typeof HowItWorksRoute
   '/network': typeof NetworkRoute
@@ -134,11 +151,13 @@ export interface FileRoutesById {
   '/upload-receipt': typeof UploadReceiptRoute
   '/verify-business': typeof VerifyBusinessRoute
   '/entry/$id': typeof EntryIdRoute
+  '/api/public/seo-check': typeof ApiPublicSeoCheckRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/eyespyr'
     | '/how-it-works'
     | '/network'
@@ -151,9 +170,11 @@ export interface FileRouteTypes {
     | '/upload-receipt'
     | '/verify-business'
     | '/entry/$id'
+    | '/api/public/seo-check'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/eyespyr'
     | '/how-it-works'
     | '/network'
@@ -166,9 +187,11 @@ export interface FileRouteTypes {
     | '/upload-receipt'
     | '/verify-business'
     | '/entry/$id'
+    | '/api/public/seo-check'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/eyespyr'
     | '/how-it-works'
     | '/network'
@@ -181,10 +204,12 @@ export interface FileRouteTypes {
     | '/upload-receipt'
     | '/verify-business'
     | '/entry/$id'
+    | '/api/public/seo-check'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
   EyespyrRoute: typeof EyespyrRoute
   HowItWorksRoute: typeof HowItWorksRoute
   NetworkRoute: typeof NetworkRoute
@@ -197,6 +222,7 @@ export interface RootRouteChildren {
   UploadReceiptRoute: typeof UploadReceiptRoute
   VerifyBusinessRoute: typeof VerifyBusinessRoute
   EntryIdRoute: typeof EntryIdRoute
+  ApiPublicSeoCheckRoute: typeof ApiPublicSeoCheckRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -278,6 +304,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EyespyrRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -292,11 +325,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EntryIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/seo-check': {
+      id: '/api/public/seo-check'
+      path: '/api/public/seo-check'
+      fullPath: '/api/public/seo-check'
+      preLoaderRoute: typeof ApiPublicSeoCheckRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
   EyespyrRoute: EyespyrRoute,
   HowItWorksRoute: HowItWorksRoute,
   NetworkRoute: NetworkRoute,
@@ -309,17 +350,8 @@ const rootRouteChildren: RootRouteChildren = {
   UploadReceiptRoute: UploadReceiptRoute,
   VerifyBusinessRoute: VerifyBusinessRoute,
   EntryIdRoute: EntryIdRoute,
+  ApiPublicSeoCheckRoute: ApiPublicSeoCheckRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

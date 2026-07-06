@@ -3,7 +3,7 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import ogImg from "@/assets/og-network.jpg";
 
-const SITE_URL = "";
+const SITE_URL = "https://eyespyr.com";
 const OG_IMAGE = `${SITE_URL}${ogImg}`;
 
 
