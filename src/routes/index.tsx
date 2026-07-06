@@ -3,6 +3,11 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import { ScanBar } from "@/components/ScanBar";
 import { EyeMark } from "@/components/EyeMark";
+import ogHome from "@/assets/og-home.jpg";
+
+const SITE_URL = "https://eyespyr.com";
+const OG_IMAGE = `${SITE_URL}${ogHome}`;
+
 
 const HOME_DESC =
   "Un-riggable verification scores for the IAM trade network. Real-time monitoring, tamper-proof, PIPEDA compliant.";
