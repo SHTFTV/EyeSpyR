@@ -65,9 +65,10 @@ const steps = [
   },
   {
     n: "03",
-    title: "Go Live & Verified",
-    body: "The EyeSpyR badge activates on your listing. IAM ops confirms business registration and physical presence. Your public score goes live.",
+    title: "Upload Credentials & Go Live",
+    body: "Upload your business license, trade tickets, insurance, and any manufacturer or industry accreditations. IAM ops verifies each document against the issuing body, confirms physical presence, and the EyeSpyR badge activates on your listing.",
   },
+
   {
     n: "04",
     title: "Monitor & Grow",

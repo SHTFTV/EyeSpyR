@@ -42,6 +42,10 @@ const requirements = [
     b: "Validated business registration and licensing on file with IAM.",
   },
   {
+    t: "Credentials Uploaded",
+    b: "Trade tickets, Red Seal certificates, liability insurance, WCB clearance and any industry accreditations uploaded to the operator profile and verified against the issuing body.",
+  },
+  {
     t: "Verified Location",
     b: "Confirmed physical presence or verified service area in the Lower Mainland (Vancouver, Surrey, Langley and surrounding).",
   },
@@ -50,10 +54,11 @@ const requirements = [
     b: "Authorized sole IAM provider for their trade in that region. One operator per 100K population.",
   },
   {
-    t: "4.5+ Score Maintained",
-    b: "Active EyeSpyR score at or above the quality floor. Badge revoked if the score drops and is not resolved.",
+    t: "Receipt-Weighted Score at 4.5+",
+    b: "Active EyeSpyR score at or above the quality floor. Reviews backed by uploaded receipts carry higher weight — good or bad. Badge revoked if the score drops and is not resolved.",
   },
 ];
+
 
 function BadgePage() {
   return (
