@@ -71,27 +71,20 @@ const slas = [
 function Index() {
   return (
     <SiteLayout>
-      <PageHero
-        eyebrow="EyeSpyR · Verification Platform"
-        title="THE TRUST"
-        accent="STANDARD"
-        lead="The verification and quality-control engine behind every IAM contractor. Real-time monitoring. Un-riggable scores. Territory-exclusive."
-        backgroundImage={heroAsset.url}
-        backgroundImageAlt="EyeSpyR — the trust standard verification platform hero banner"
-        backgroundFit="contain"
-        backgroundDim="light"
-        heroLink={IAM_TARGET_URL}
-        heroLinkLabel="Visit Industry Army Marketing"
-        onHeroLinkClick={() =>
+      <HeroBanner
+        image={heroAsset.url}
+        imageAlt="EyeSpyR — un-riggable verification for the IAM trade network"
+        href={IAM_TARGET_URL}
+        hrefLabel="Visit Industry Army Marketing"
+        onHrefClick={() =>
           trackEvent({ name: "hero_outbound_click", url: IAM_TARGET_URL, page: "/" })
         }
+        caption="The verification and quality-control engine behind every IAM contractor."
       >
-        <ScanBar />
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link to="/scan" className="acid-btn">Get Verified</Link>
-          <Link to="/how-it-works" className="ghost-btn">How It Works</Link>
-        </div>
-      </PageHero>
+        <Link to="/scan" className="acid-btn">Get Verified</Link>
+        <Link to="/how-it-works" className="ghost-btn">How It Works</Link>
+      </HeroBanner>
+      <div className="mx-auto max-w-3xl px-5 pb-10 sm:px-8"><ScanBar /></div>
 
       {/* Score badge showcase */}
       <section className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
