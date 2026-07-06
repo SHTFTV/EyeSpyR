@@ -194,7 +194,7 @@ function demoRef() {
   return "RCPT-" + Math.random().toString(36).slice(2, 8).toUpperCase();
 }
 
-function SuccessCard({ state, onReset }: { state: { ref: string; message: string }; onReset: () => void }) {
+function SuccessCard({ state, onReset }: { state: { ref: string; message: string; demo: boolean }; onReset: () => void }) {
   return (
     <div className="panel border-[color:var(--acid)] p-8 text-center shadow-[0_0_60px_-30px_var(--acid)]">
       <p className="eyebrow">Received</p>
@@ -202,11 +202,14 @@ function SuccessCard({ state, onReset }: { state: { ref: string; message: string
         Reference · <span className="text-[color:var(--acid)]">{state.ref}</span>
       </h2>
       <p className="mx-auto mt-4 max-w-md text-sm text-muted-foreground">{state.message}</p>
+      {state.demo && (
+        <p className="mono-label mt-2 text-muted-foreground">DEMO MODE · LIVE API UNREACHABLE</p>
+      )}
       <div className="mt-8 grid gap-3 text-left sm:grid-cols-3">
         {[
-          ["01", "Queued", "Entry logged with reference number."],
-          ["02", "Verifying", "Cross-check against operator ledger + issuing body."],
-          ["03", "Weighted", "Verified → published to public timeline with higher weight."],
+          ["01", "Received", "Entry logged with reference number. Email sent."],
+          ["02", "Checking", "OCR + cross-check against operator ledger. Email sent."],
+          ["03", "Weighted / Flagged", "Verified → published to public ledger. Email sent."],
         ].map(([n, t, b]) => (
           <div key={n} className="border border-border p-4">
             <p className="font-display text-3xl font-black text-[color:var(--acid)]">{n}</p>
@@ -216,12 +219,14 @@ function SuccessCard({ state, onReset }: { state: { ref: string; message: string
         ))}
       </div>
       <div className="mt-8 flex flex-wrap justify-center gap-3">
-        <Link to="/transparency" className="acid-btn">See How Scoring Works</Link>
+        <Link to="/entry/$id" params={{ id: state.ref }} className="acid-btn">View Public Ledger Entry</Link>
+        <Link to="/transparency" className="ghost-btn">See How Scoring Works</Link>
         <button onClick={onReset} className="ghost-btn">Upload Another</button>
       </div>
     </div>
   );
 }
+
 
 type FieldProps = React.InputHTMLAttributes<HTMLInputElement> & { label: string; name: string };
 function Field({ label, name, ...rest }: FieldProps) {
