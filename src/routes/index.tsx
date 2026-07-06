@@ -187,6 +187,7 @@ function Index() {
                 <li>· Liability insurance &amp; WCB clearance</li>
                 <li>· Manufacturer / industry accreditations</li>
               </ul>
+              <Link to="/verify-business" className="acid-btn mt-6">Verify a Business</Link>
             </div>
 
             <div className="panel p-7">
@@ -201,14 +202,19 @@ function Index() {
                 <li>· Negative reviews carry the same weight as positive</li>
                 <li>· Consumers protected — businesses can't bury the truth</li>
               </ul>
+              <Link to="/upload-receipt" className="acid-btn mt-6">Upload a Receipt</Link>
             </div>
           </div>
 
           <p className="mono-label mt-10 text-center text-muted-foreground">
             We monitor the open web for reviews and brand-use signal 24/7. EyeSpyR is the protection layer — for the consumer, and for the operator who earned the badge.
+            {" "}
+            <Link to="/transparency" className="text-[color:var(--acid)] underline decoration-[color:var(--acid)]/40 underline-offset-4 hover:decoration-[color:var(--acid)]">See the full scoring rules →</Link>
           </p>
         </div>
       </section>
+
+
 
       {/* Integrity */}
       <section className="px-5 py-20 sm:px-8">
