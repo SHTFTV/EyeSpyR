@@ -288,3 +288,5 @@ export function demoEntry(id: string): EntryDetail {
       ],
     },
   };
+}
+
