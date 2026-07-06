@@ -190,9 +190,8 @@ function UploadReceipt() {
   );
 }
 
-function demoRef() {
-  return "RCPT-" + Math.random().toString(36).slice(2, 8).toUpperCase();
-}
+
+
 
 function SuccessCard({ state, onReset }: { state: { ref: string; message: string; demo: boolean }; onReset: () => void }) {
   return (
