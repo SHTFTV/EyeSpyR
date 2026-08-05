@@ -3,6 +3,7 @@ import { useState } from "react";
 import { EyeMark, Wordmark } from "./EyeMark";
 
 const links = [
+  { to: "/trust-layer", label: "Trust Layer" },
   { to: "/how-it-works", label: "How It Works" },
   { to: "/transparency", label: "Transparency" },
   { to: "/network", label: "Network" },
