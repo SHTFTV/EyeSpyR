@@ -83,6 +83,7 @@ function Index() {
       >
         <Link to="/scan" className="acid-btn">Get Verified</Link>
         <Link to="/how-it-works" className="ghost-btn">How It Works</Link>
+        <Link to="/trust-layer" className="ghost-btn">The Trust Layer</Link>
       </HeroBanner>
       <div className="mx-auto max-w-3xl px-5 pb-10 sm:px-8"><ScanBar /></div>
 
