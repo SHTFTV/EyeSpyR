@@ -66,18 +66,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "EyeSpyR — The Trust Standard for Trade Verification" },
+      { title: "EyeSpyR — Trusted Business Identity Infrastructure" },
       {
         name: "description",
         content:
-          "EyeSpyR is the verification and quality-control engine for the IAM contractor network. Real-time monitoring, tamper-proof scores, PIPEDA compliant.",
+          "EyeSpyR verifies business identity for the AI-search era — credentials matched to authoritative records, receipt-backed reviews, and timestamped provenance. Built for the trades first. By Industry Army Marketing Inc.",
       },
       { name: "author", content: "Industry Army Marketing Inc." },
-      { property: "og:title", content: "EyeSpyR — The Trust Standard" },
+      { property: "og:title", content: "EyeSpyR — Trusted Business Identity Infrastructure" },
       {
         property: "og:description",
         content:
-          "The verification platform behind every IAM contractor. Un-riggable scores. Real-time monitoring. Territory-exclusive.",
+          "The trust layer for the AI-search era — un-riggable verification of credentials, reviews, and provenance. By Industry Army Marketing.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
