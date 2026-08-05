@@ -12,14 +12,14 @@ const OG_IMAGE = `${SITE_URL}${ogHome}`;
 
 
 const HOME_DESC =
-  "Un-riggable verification scores for the IAM trade network. Real-time monitoring, tamper-proof, PIPEDA compliant.";
+  "Verified business identity for the AI-search era: credentials matched to authoritative records, receipt-backed reviews, and timestamped provenance. Built for the trades first.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "EyeSpyR — The Trust Standard" },
+      { title: "EyeSpyR — Trusted Business Identity Infrastructure" },
       { name: "description", content: HOME_DESC },
-      { property: "og:title", content: "EyeSpyR — The Trust Standard" },
+      { property: "og:title", content: "EyeSpyR — Trusted Business Identity Infrastructure" },
       { property: "og:description", content: HOME_DESC },
       { property: "og:type", content: "website" },
       { property: "og:url", content: `${SITE_URL}/` },
@@ -27,7 +27,7 @@ export const Route = createFileRoute("/")({
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "EyeSpyR — The Trust Standard" },
+      { name: "twitter:title", content: "EyeSpyR — Trusted Business Identity Infrastructure" },
       { name: "twitter:description", content: HOME_DESC },
       { name: "twitter:image", content: OG_IMAGE },
     ],
